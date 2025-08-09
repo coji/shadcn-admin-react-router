@@ -60,6 +60,62 @@ Start the server
   pnpm run dev
 ```
 
+## Contributing
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for commit messages and automated releases via [Release Please](https://github.com/googleapis/release-please).
+
+### Commit Message Format
+
+```
+<type>: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+#### Types
+
+- `feat:` - A new feature (triggers minor version bump)
+- `fix:` - A bug fix (triggers patch version bump)
+- `docs:` - Documentation only changes
+- `style:` - Changes that don't affect code meaning (formatting, etc.)
+- `refactor:` - Code change that neither fixes a bug nor adds a feature
+- `perf:` - Performance improvements
+- `test:` - Adding or correcting tests
+- `chore:` - Changes to build process or auxiliary tools
+- `ci:` - CI configuration changes
+
+#### Breaking Changes
+
+Add `!` after the type or add `BREAKING CHANGE:` in the footer to trigger a major version bump.
+
+```bash
+feat!: remove support for Node 18
+
+# or
+
+feat: add new API endpoint
+
+BREAKING CHANGE: removed deprecated endpoints
+```
+
+### Examples
+
+```bash
+# Feature
+feat: add dark mode toggle to settings
+
+# Bug fix
+fix: resolve navigation issue on mobile devices
+
+# Breaking change
+feat!: migrate to React Router v7
+
+# Chore
+chore: update dependencies
+```
+
 ## Author
 
 Crafted with 🤍 by [@coji](https://github.com/coji)
