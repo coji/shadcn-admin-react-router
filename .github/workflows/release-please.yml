@@ -18,29 +18,29 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          
+
       # The logic below handles the npm publication:
       - name: Checkout
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/checkout@v4
-        
+
       - name: Setup Node
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          
+
       - name: Install pnpm
         if: ${{ steps.release.outputs.release_created }}
         run: npm install -g pnpm
-        
+
       - name: Install dependencies
         if: ${{ steps.release.outputs.release_created }}
         run: pnpm install
-        
+
       - name: Build
         if: ${{ steps.release.outputs.release_created }}
         run: pnpm build
-        
+
       # Add any additional release tasks here
       # For example, deploying to production, publishing to npm, etc.
