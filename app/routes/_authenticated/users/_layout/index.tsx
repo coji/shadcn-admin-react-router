@@ -7,16 +7,16 @@ import { Search } from '~/components/search'
 import { ThemeSwitch } from '~/components/theme-switch'
 import { Button } from '~/components/ui/button'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
-import { columns } from './+_layout/components/users-columns'
-import { UsersTable } from './+_layout/components/users-table'
+import { columns } from './+components/users-columns'
+import { UsersTable } from './+components/users-table'
 import {
   FilterSchema,
   PaginationSchema,
   QuerySchema,
   SortSchema,
-} from './+_layout/hooks/use-data-table-state'
-import { getFacetedCounts, listFilteredUsers } from './+_layout/queries.server'
-import type { Route } from './+types/_layout'
+} from './+hooks/use-data-table-state'
+import { getFacetedCounts, listFilteredUsers } from './+queries.server'
+import type { Route } from './+types/index'
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const searchParams = new URLSearchParams(new URL(request.url).searchParams)

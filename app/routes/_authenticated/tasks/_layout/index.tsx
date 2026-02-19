@@ -4,7 +4,7 @@ import { Main } from '~/components/layout/main'
 import { ProfileDropdown } from '~/components/profile-dropdown'
 import { Search } from '~/components/search'
 import { ThemeSwitch } from '~/components/theme-switch'
-import { useBreadcrumbs } from './+_layout/hooks/use-breadcrumbs'
+import { useBreadcrumbs } from './+hooks/use-breadcrumbs'
 
 export const handle = {
   breadcrumb: () => ({ label: 'Tasks', to: '/tasks' }),

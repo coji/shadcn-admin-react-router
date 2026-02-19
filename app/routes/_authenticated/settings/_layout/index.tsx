@@ -12,7 +12,7 @@ import { ProfileDropdown } from '~/components/profile-dropdown'
 import { Search } from '~/components/search'
 import { ThemeSwitch } from '~/components/theme-switch'
 import { Separator } from '~/components/ui/separator'
-import SidebarNav from './+_layout/components/sidebar-nav'
+import SidebarNav from './+components/sidebar-nav'
 
 export default function Settings() {
   return (

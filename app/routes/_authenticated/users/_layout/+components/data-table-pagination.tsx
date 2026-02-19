@@ -16,7 +16,7 @@ import {
 import {
   PAGINATION_PER_PAGE_ITEMS,
   useDataTableState,
-} from '../hooks/use-data-table-state'
+} from '../+hooks/use-data-table-state'
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>

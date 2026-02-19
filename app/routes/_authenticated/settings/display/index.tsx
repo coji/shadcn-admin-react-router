@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
-import ContentSection from '../+_layout/components/content-section'
+import ContentSection from '../_layout/+components/content-section'
 import { DisplayForm } from './+display-form'
 import type { Route } from './+types/index'
 
