@@ -4,8 +4,8 @@ import { Badge } from '~/components/ui/badge'
 import { Checkbox } from '~/components/ui/checkbox'
 import { labels } from '../../+_shared/data/data'
 import type { Task } from '../../+_shared/data/schema'
-import { DataTableColumnHeader } from '../components/data-table-column-header'
-import { DataTableRowActions } from '../components/data-table-row-actions'
+import { DataTableColumnHeader } from '../+components/data-table-column-header'
+import { DataTableRowActions } from '../+components/data-table-row-actions'
 import { FILTER_FIELD_LABELS } from './constants'
 
 export const columns: ColumnDef<Task>[] = [

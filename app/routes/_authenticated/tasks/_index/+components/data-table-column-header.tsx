@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { cn } from '~/lib/utils'
-import { useDataTableState } from '../hooks/use-data-table-state'
+import { useDataTableState } from '../+hooks/use-data-table-state'
 
 interface DataTableColumnHeaderProps<
   TData,

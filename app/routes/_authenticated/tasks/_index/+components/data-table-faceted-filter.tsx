@@ -18,8 +18,8 @@ import {
 } from '~/components/ui/popover'
 import { Separator } from '~/components/ui/separator'
 import { cn } from '~/lib/utils'
-import type { Filters } from '../../_index/config'
-import { useDataTableState } from '../hooks/use-data-table-state'
+import type { Filters } from '../config'
+import { useDataTableState } from '../+hooks/use-data-table-state'
 
 interface DataTableFacetedFilterProps {
   title?: string

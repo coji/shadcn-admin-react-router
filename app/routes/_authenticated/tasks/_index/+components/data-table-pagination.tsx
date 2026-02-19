@@ -13,8 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import { PAGINATION_PER_PAGE_ITEMS } from '../config/constants'
-import { useDataTableState } from '../hooks/use-data-table-state'
+import { PAGINATION_PER_PAGE_ITEMS } from '../+config/constants'
+import { useDataTableState } from '../+hooks/use-data-table-state'
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
