@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { cn } from '~/lib/utils'
-import { SEARCH_FIELD } from '../config'
+import { SEARCH_FIELD } from '../+config'
 
 interface SearchInputProps extends React.ComponentPropsWithRef<typeof Input> {}
 export const SearchInput = ({ className, ...rest }: SearchInputProps) => {

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { data, href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
-import { users } from '../+_shared/data/users'
+import { users } from '../+shared/data/users'
 import { UsersDeleteDialog } from './+components/users-delete-dialog'
 import type { Route } from './+types/index'
 

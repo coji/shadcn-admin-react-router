@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { data, href, useFetcher } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
 import { ConfirmDialog } from '~/components/confirm-dialog'
-import type { Task } from './+_shared/data/schema'
-import { tasks } from './+_shared/data/tasks'
+import type { Task } from './+shared/data/schema'
+import { tasks } from './+shared/data/tasks'
 import type { Route } from './+types/$task.delete'
 
 export const action = async ({ params }: Route.ActionArgs) => {

@@ -18,8 +18,8 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { TaskDeleteConfirmDialog } from '../../$task.delete'
-import { labels } from '../../+_shared/data/data'
-import { taskSchema } from '../../+_shared/data/schema'
+import { labels } from '../../+shared/data/data'
+import { taskSchema } from '../../+shared/data/schema'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>

@@ -1,6 +1,6 @@
-import type { Task } from '../+_shared/data/schema'
-import { tasks as initialTasks } from '../+_shared/data/tasks'
-import type { FILTER_FIELDS, Search } from '../_index/config'
+import type { Task } from '../+shared/data/schema'
+import { tasks as initialTasks } from '../+shared/data/tasks'
+import type { FILTER_FIELDS, Search } from './+config'
 
 const matchesSearch = (task: Task, search: Search) => {
   const searchTerms = Object.values(search)

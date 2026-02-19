@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithError, dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
-import { tasks } from './+_shared/data/tasks'
+import { tasks } from './+shared/data/tasks'
 import type { Route } from './+types/$task.label'
 
 export const action = async ({ request, params }: Route.ActionArgs) => {

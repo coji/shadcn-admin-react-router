@@ -1,4 +1,4 @@
-import { users as initialUsers } from '../+_shared/data/users'
+import { users as initialUsers } from '../+shared/data/users'
 
 interface ListFilteredUsersArgs {
   username: string

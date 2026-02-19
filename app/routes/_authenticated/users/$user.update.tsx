@@ -7,8 +7,8 @@ import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import {
   UsersActionDialog,
   editSchema as formSchema,
-} from './+_shared/components/users-action-dialog'
-import { users } from './+_shared/data/users'
+} from './+shared/components/users-action-dialog'
+import { users } from './+shared/data/users'
 import type { Route } from './+types/$user.update'
 
 export const loader = ({ params }: Route.LoaderArgs) => {

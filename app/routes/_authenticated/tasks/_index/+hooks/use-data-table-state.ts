@@ -12,7 +12,7 @@ import {
   type Pagination,
   type Search,
   type Sort,
-} from '../config'
+} from '../+config'
 
 export function useDataTableState() {
   const [searchParams, setSearchParams] = useSearchParams()

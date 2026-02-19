@@ -4,7 +4,7 @@ import { ConfirmDialog } from '~/components/confirm-dialog'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import type { User } from '../../+_shared/data/schema'
+import type { User } from '../../+shared/data/schema'
 
 interface Props {
   open: boolean

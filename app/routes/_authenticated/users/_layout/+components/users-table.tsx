@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table'
-import type { User } from '../../+_shared/data/schema'
+import type { User } from '../../+shared/data/schema'
 import {
   DataTablePagination,
   type PaginationProps,

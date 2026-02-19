@@ -4,7 +4,7 @@ import {
   PAGINATION_PER_PAGE_DEFAULT,
   PAGINATION_PER_PAGE_ITEMS,
   SEARCH_FIELD,
-} from '../config'
+} from '../+config'
 
 // Define the schema for the search query
 export const SearchSchema = z.object({

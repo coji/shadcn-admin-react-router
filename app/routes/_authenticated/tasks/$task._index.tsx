@@ -6,8 +6,8 @@ import { Separator } from '~/components/ui/separator'
 import {
   TasksMutateForm,
   updateSchema,
-} from './+_shared/components/tasks-mutate-form'
-import { tasks } from './+_shared/data/tasks'
+} from './+shared/components/tasks-mutate-form'
+import { tasks } from './+shared/data/tasks'
 import type { Route } from './+types/$task._index'
 
 export const handle = {
