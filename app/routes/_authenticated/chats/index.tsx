@@ -25,7 +25,7 @@ import { ScrollArea } from '~/components/ui/scroll-area'
 import { Separator } from '~/components/ui/separator'
 import { cn } from '~/lib/utils'
 // Fake Data
-import { conversations } from './+chats/data/convo.json'
+import { conversations } from './+data/convo.json'
 
 type ChatUser = (typeof conversations)[number]
 type Convo = ChatUser['messages'][number]

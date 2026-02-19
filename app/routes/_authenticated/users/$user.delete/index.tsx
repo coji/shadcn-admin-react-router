@@ -3,9 +3,9 @@ import { useState } from 'react'
 import { data, href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
-import { UsersDeleteDialog } from './+$user.delete/components/users-delete-dialog'
-import { users } from './+_shared/data/users'
-import type { Route } from './+types/$user.delete'
+import { users } from '../+_shared/data/users'
+import { UsersDeleteDialog } from './+components/users-delete-dialog'
+import type { Route } from './+types/index'
 
 export const loader = ({ params }: Route.LoaderArgs) => {
   const user = users.find((user) => user.id === params.user)

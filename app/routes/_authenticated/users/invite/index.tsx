@@ -5,8 +5,8 @@ import { href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
-import { UsersInviteDialog } from './+invite/components/users-invite-dialog'
-import type { Route } from './+types/invite'
+import { UsersInviteDialog } from './+components/users-invite-dialog'
+import type { Route } from './+types/index'
 
 export const formSchema = z.object({
   email: z.email({

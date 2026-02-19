@@ -2,9 +2,9 @@ import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
-import ContentSection from './+_layout/components/content-section'
-import { AccountForm } from './+account/account-form'
-import type { Route } from './+types/account'
+import ContentSection from '../+_layout/components/content-section'
+import { AccountForm } from './+account-form'
+import type { Route } from './+types/index'
 
 export const accountFormSchema = z.object({
   name: z

@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from '~/components/ui/select'
 import { Separator } from '~/components/ui/separator'
-import { apps } from './+apps/data/apps'
+import { apps } from './+data/apps'
 
 const appText = new Map<string, string>([
   ['all', 'All Apps'],

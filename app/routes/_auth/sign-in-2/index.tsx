@@ -3,8 +3,8 @@ import { setTimeout } from 'node:timers/promises'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import ViteLogo from '~/assets/vite.svg'
-import { UserAuthForm } from './+sign-in-2/components/user-auth-form'
-import type { Route } from './+types/sign-in-2'
+import { UserAuthForm } from './+components/user-auth-form'
+import type { Route } from './+types/index'
 
 export const formSchema = z.object({
   email: z.email({

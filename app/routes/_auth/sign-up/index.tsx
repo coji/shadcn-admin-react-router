@@ -4,8 +4,8 @@ import { Link } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { Card } from '~/components/ui/card'
-import { SignUpForm } from './+sign-up/components/sign-up-form'
-import type { Route } from './+types/sign-up'
+import { SignUpForm } from './+components/sign-up-form'
+import type { Route } from './+types/index'
 
 export const formSchema = z
   .object({

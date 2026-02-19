@@ -2,9 +2,9 @@ import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
-import ContentSection from './+_layout/components/content-section'
-import { AppearanceForm } from './+appearance/appearance-form'
-import type { Route } from './+types/appearance'
+import ContentSection from '../+_layout/components/content-section'
+import { AppearanceForm } from './+appearance-form'
+import type { Route } from './+types/index'
 
 export const appearanceFormSchema = z.object({
   theme: z.enum(['light', 'dark'], {

@@ -13,8 +13,8 @@ import {
   CardTitle,
 } from '~/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
-import { Overview } from './+_index/components/overview'
-import { RecentSales } from './+_index/components/recent-sales'
+import { Overview } from './+components/overview'
+import { RecentSales } from './+components/recent-sales'
 
 const topNav = [
   {

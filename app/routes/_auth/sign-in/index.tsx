@@ -3,8 +3,8 @@ import { setTimeout } from 'node:timers/promises'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { Card } from '~/components/ui/card'
-import { UserAuthForm } from './+sign-in/components/user-auth-form'
-import type { Route } from './+types/sign-in'
+import { UserAuthForm } from './+components/user-auth-form'
+import type { Route } from './+types/index'
 
 export const formSchema = z.object({
   email: z.email({

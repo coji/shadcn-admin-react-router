@@ -2,9 +2,9 @@ import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
-import ContentSection from './+_layout/components/content-section'
-import { DisplayForm } from './+display/display-form'
-import type { Route } from './+types/display'
+import ContentSection from '../+_layout/components/content-section'
+import { DisplayForm } from './+display-form'
+import type { Route } from './+types/index'
 
 export const displayFormSchema = z.object({
   items: z.array(z.string()).refine((value) => value.some((item) => item), {

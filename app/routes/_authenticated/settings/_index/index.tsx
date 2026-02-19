@@ -2,9 +2,9 @@ import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
-import ProfileForm from './+_index/profile-form'
-import ContentSection from './+_layout/components/content-section'
-import type { Route } from './+types/_index'
+import ContentSection from '../+_layout/components/content-section'
+import ProfileForm from './+profile-form'
+import type { Route } from './+types/index'
 
 export const profileFormSchema = z.object({
   username: z

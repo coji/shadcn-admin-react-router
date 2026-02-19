@@ -4,8 +4,8 @@ import { Link } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { Card } from '~/components/ui/card'
-import { OtpForm } from './+otp/components/otp-form'
-import type { Route } from './+types/otp'
+import { OtpForm } from './+components/otp-form'
+import type { Route } from './+types/index'
 
 export const formSchema = z.object({
   otp: z.string({ error: 'Please enter your otp code.' }),

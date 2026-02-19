@@ -4,8 +4,8 @@ import { Link } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { Card } from '~/components/ui/card'
-import { ForgotForm } from './+forgot-password/components/forgot-password-form'
-import type { Route } from './+types/forgot-password'
+import { ForgotForm } from './+components/forgot-password-form'
+import type { Route } from './+types/index'
 
 export const formSchema = z.object({
   email: z.email({
