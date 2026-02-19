@@ -1,0 +1,60 @@
+import { parseWithZod } from '@conform-to/zod/v4'
+import { setTimeout as sleep } from 'node:timers/promises'
+import { useState } from 'react'
+import { href } from 'react-router'
+import { redirectWithSuccess } from 'remix-toast'
+import { z } from 'zod'
+import { useSmartNavigation } from '~/hooks/use-smart-navigation'
+import { UsersInviteDialog } from './+invite/components/users-invite-dialog'
+import type { Route } from './+types/invite'
+
+export const formSchema = z.object({
+  email: z.email({
+    error: (issue) =>
+      issue.input === undefined
+        ? 'Please enter your email'
+        : 'Invalid email address',
+  }),
+  role: z.enum(['superadmin', 'admin', 'manager', 'cashier'], {
+    error: 'Role is required.',
+  }),
+  desc: z.string().optional(),
+})
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  const url = new URL(request.url)
+  const submission = parseWithZod(await request.formData(), {
+    schema: formSchema,
+  })
+  if (submission.status !== 'success') {
+    return { lastResult: submission.reply() }
+  }
+
+  await sleep(1000)
+
+  return redirectWithSuccess(`/users?${url.searchParams.toString()}`, {
+    message: 'User invited successfully!',
+    description: JSON.stringify(submission.value),
+  })
+}
+
+export default function UserInvite() {
+  const [open, setOpen] = useState(true)
+  const { goBack } = useSmartNavigation({ baseUrl: href('/users') })
+
+  return (
+    <UsersInviteDialog
+      key="user-invite"
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) {
+          setOpen(false)
+          // wait for the drawer to close
+          setTimeout(() => {
+            goBack()
+          }, 300) // the duration of the modal close animation
+        }
+      }}
+    />
+  )
+}
