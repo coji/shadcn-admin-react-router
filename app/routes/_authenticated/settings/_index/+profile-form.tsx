@@ -20,7 +20,8 @@ import {
   SelectValue,
 } from '~/components/ui/select'
 import { Textarea } from '~/components/ui/textarea'
-import { profileFormSchema, type action } from '../_index'
+import { profileFormSchema } from './+schema'
+import type { action } from './index'
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 

@@ -1,16 +1,10 @@
 import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
-import { z } from 'zod'
 import ContentSection from '../+components/content-section'
 import { DisplayForm } from './+display-form'
+import { displayFormSchema } from './+schema'
 import type { Route } from './+types/index'
-
-export const displayFormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: 'You have to select at least one item.',
-  }),
-})
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const submission = parseWithZod(await request.formData(), {

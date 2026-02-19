@@ -2,17 +2,10 @@ import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { Link } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
-import { z } from 'zod'
 import { Card } from '~/components/ui/card'
 import { ForgotForm } from './+components/forgot-password-form'
+import { formSchema } from './+schema'
 import type { Route } from './+types/index'
-
-export const formSchema = z.object({
-  email: z.email({
-    error: (issue) =>
-      !issue.input ? 'Please enter your email' : 'Invalid email address',
-  }),
-})
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const submission = parseWithZod(await request.formData(), {

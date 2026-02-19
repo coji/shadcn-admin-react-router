@@ -5,7 +5,8 @@ import type { z } from 'zod'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Label } from '~/components/ui/label'
-import { displayFormSchema, type action } from '../display'
+import { displayFormSchema } from './+schema'
+import type { action } from './index'
 
 const items = [
   {

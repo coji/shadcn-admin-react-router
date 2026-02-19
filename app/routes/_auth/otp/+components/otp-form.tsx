@@ -11,7 +11,8 @@ import {
   InputOTPSlot,
 } from '~/components/ui/input-otp'
 import { cn } from '~/lib/utils'
-import { formSchema, type action } from '../../otp'
+import { formSchema } from '../+schema'
+import type { action } from '../index'
 
 type OtpFormProps = HTMLAttributes<HTMLFormElement>
 

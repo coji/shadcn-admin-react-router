@@ -8,7 +8,8 @@ import { Checkbox } from '~/components/ui/checkbox'
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { Switch } from '~/components/ui/switch'
-import { notificationsFormSchema, type action } from '../notifications'
+import { notificationsFormSchema } from './+schema'
+import type { action } from './index'
 
 type NotificationsFormValues = z.infer<typeof notificationsFormSchema>
 

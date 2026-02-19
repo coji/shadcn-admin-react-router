@@ -23,7 +23,8 @@ import {
   PopoverTrigger,
 } from '~/components/ui/popover'
 import { cn } from '~/lib/utils'
-import { accountFormSchema, type action } from '../account'
+import { accountFormSchema } from './+schema'
+import type { action } from './index'
 
 const languages = [
   { label: 'English', value: 'en' },

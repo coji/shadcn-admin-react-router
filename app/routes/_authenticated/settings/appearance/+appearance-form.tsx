@@ -8,7 +8,8 @@ import { Button, buttonVariants } from '~/components/ui/button'
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { cn } from '~/lib/utils'
-import { appearanceFormSchema, type action } from '../appearance'
+import { appearanceFormSchema } from './+schema'
+import type { action } from './index'
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>
 

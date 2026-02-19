@@ -3,23 +3,10 @@ import { setTimeout as sleep } from 'node:timers/promises'
 import { useState } from 'react'
 import { href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
-import { z } from 'zod'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import { UsersInviteDialog } from './+components/users-invite-dialog'
+import { formSchema } from './+schema'
 import type { Route } from './+types/index'
-
-export const formSchema = z.object({
-  email: z.email({
-    error: (issue) =>
-      issue.input === undefined
-        ? 'Please enter your email'
-        : 'Invalid email address',
-  }),
-  role: z.enum(['superadmin', 'admin', 'manager', 'cashier'], {
-    error: 'Role is required.',
-  }),
-  desc: z.string().optional(),
-})
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const url = new URL(request.url)

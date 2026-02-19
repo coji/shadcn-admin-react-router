@@ -1,19 +1,10 @@
 import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
-import { z } from 'zod'
 import ContentSection from '../+components/content-section'
 import { AppearanceForm } from './+appearance-form'
+import { appearanceFormSchema } from './+schema'
 import type { Route } from './+types/index'
-
-export const appearanceFormSchema = z.object({
-  theme: z.enum(['light', 'dark'], {
-    error: 'Please select a theme.',
-  }),
-  font: z.enum(['inter', 'manrope', 'system'], {
-    error: 'Please select a font.',
-  }),
-})
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const submission = parseWithZod(await request.formData(), {

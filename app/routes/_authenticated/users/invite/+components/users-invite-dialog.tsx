@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from '~/components/ui/select'
 import { Textarea } from '~/components/ui/textarea'
-import { formSchema } from '../../invite'
+import { formSchema } from '../+schema'
 
 interface Props {
   open: boolean
