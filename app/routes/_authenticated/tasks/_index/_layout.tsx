@@ -3,9 +3,9 @@ import { href, Link } from 'react-router'
 import { Button } from '~/components/ui/button'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import { DataTable } from './+components/data-table'
+import { columns, parseQueryParams } from './+config'
 import { getFacetedCounts, listFilteredTasks } from './+queries.server'
 import type { Route } from './+types/_layout'
-import { columns, parseQueryParams } from './+config'
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const { search, filters, page, perPage, sortBy, sortOrder } =
