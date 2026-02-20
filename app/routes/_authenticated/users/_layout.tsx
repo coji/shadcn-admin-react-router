@@ -1,5 +1,12 @@
 import { IconMailPlus, IconUserPlus } from '@tabler/icons-react'
 import { href, Link, Outlet } from 'react-router'
+import {
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderDescription,
+  PageHeaderHeading,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
 import { Button } from '~/components/ui/button'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import type { RouteHandle } from '~/routes/_authenticated/_layout'
@@ -66,14 +73,14 @@ export default function Users({
 
   return (
     <>
-      <div className="mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">User List</h1>
-          <p className="text-muted-foreground">
+      <PageHeader>
+        <PageHeaderHeading>
+          <PageHeaderTitle>User List</PageHeaderTitle>
+          <PageHeaderDescription>
             Manage your users and their roles here.
-          </p>
-        </div>
-        <div className="flex gap-2">
+          </PageHeaderDescription>
+        </PageHeaderHeading>
+        <PageHeaderActions>
           <Button variant="outline" className="space-x-1" asChild>
             <Link to={href('/users/invite')}>
               <span>Invite User</span> <IconMailPlus size={18} />
@@ -84,8 +91,8 @@ export default function Users({
               <span>Add User</span> <IconUserPlus size={18} />
             </Link>
           </Button>
-        </div>
-      </div>
+        </PageHeaderActions>
+      </PageHeader>
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
         <UsersTable
           data={users}

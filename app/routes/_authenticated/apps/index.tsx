@@ -4,6 +4,12 @@ import {
   IconSortDescendingLetters,
 } from '@tabler/icons-react'
 import { useState } from 'react'
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import {
@@ -50,12 +56,14 @@ export default function Apps() {
 
   return (
     <>
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">App Integrations</h1>
-        <p className="text-muted-foreground">
-          Here&apos;s a list of your apps for the integration!
-        </p>
-      </div>
+      <PageHeader>
+        <PageHeaderHeading>
+          <PageHeaderTitle>App Integrations</PageHeaderTitle>
+          <PageHeaderDescription>
+            Here&apos;s a list of your apps for the integration!
+          </PageHeaderDescription>
+        </PageHeaderHeading>
+      </PageHeader>
       <div className="my-4 flex items-end justify-between sm:my-0 sm:items-center">
         <div className="flex flex-col gap-4 sm:my-4 sm:flex-row">
           <Input

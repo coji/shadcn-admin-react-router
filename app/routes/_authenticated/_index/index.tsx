@@ -1,5 +1,8 @@
-import { href } from 'react-router'
-import { TopNav } from '~/components/layout/top-nav'
+import {
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
 import { Button } from '~/components/ui/button'
 import {
   Card,
@@ -16,53 +19,19 @@ import { Overview } from './+components/overview'
 import { RecentSales } from './+components/recent-sales'
 import { ReportsTab } from './+components/reports-tab'
 
-const topNav = [
-  {
-    title: 'Dashboard',
-    href: href('/'),
-    disabled: false,
-  },
-  {
-    title: 'Tasks',
-    href: href('/tasks'),
-    disabled: false,
-  },
-  {
-    title: 'Apps',
-    href: href('/apps'),
-    disabled: false,
-  },
-  {
-    title: 'Chats',
-    href: href('/chats'),
-    disabled: false,
-  },
-  {
-    title: 'Users',
-    href: href('/users'),
-    disabled: false,
-  },
-  {
-    title: 'Settings',
-    href: href('/settings'),
-    disabled: false,
-  },
-]
-
 export const handle: RouteHandle = {
   breadcrumb: () => ({ label: 'Dashboard' }),
-  headerNavigation: () => <TopNav links={topNav} />,
 }
 
 export default function Dashboard() {
   return (
     <>
-      <div className="mb-2 flex items-center justify-between space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <div className="flex items-center space-x-2">
+      <PageHeader>
+        <PageHeaderTitle>Dashboard</PageHeaderTitle>
+        <PageHeaderActions>
           <Button>Download</Button>
-        </div>
-      </div>
+        </PageHeaderActions>
+      </PageHeader>
       <Tabs
         orientation="vertical"
         defaultValue="overview"

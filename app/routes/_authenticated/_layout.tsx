@@ -1,11 +1,10 @@
-import type React from 'react'
 import { Outlet, useMatches } from 'react-router'
 import { AppSidebar } from '~/components/layout/app-sidebar'
 import { Header } from '~/components/layout/header'
 import { Main } from '~/components/layout/main'
-import { ProfileDropdown } from '~/components/profile-dropdown'
-import { Search } from '~/components/search'
-import { ThemeSwitch } from '~/components/theme-switch'
+import { ProfileDropdown } from '~/components/layout/profile-dropdown'
+import { Search } from '~/components/layout/search'
+import { ThemeSwitch } from '~/components/layout/theme-switch'
 import { SidebarProvider } from '~/components/ui/sidebar'
 import { SearchProvider } from '~/context/search-context'
 import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
@@ -15,7 +14,6 @@ export interface RouteHandle {
   breadcrumb?: (data?: unknown) => { label: string; to?: string }
   headerFixed?: boolean
   mainFixed?: boolean
-  headerNavigation?: () => React.ReactNode
 }
 
 export default function DashboardLayout() {
@@ -43,7 +41,6 @@ export default function DashboardLayout() {
           )}
         >
           <Header fixed={handle.headerFixed}>
-            {handle.headerNavigation?.()}
             <Search />
             <div className="ml-auto flex items-center gap-4">
               <ThemeSwitch />
