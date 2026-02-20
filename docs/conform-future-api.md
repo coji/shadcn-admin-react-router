@@ -285,7 +285,6 @@ This allows flexible rendering such as SelectItems with icons or custom RadioGro
 ```tsx
 import { Select } from '~/components/conform'
 import { SelectItem } from '~/components/ui/select'
-
 ;<Select {...fields.status.selectProps} placeholder="Select status">
   <SelectItem value="todo">Todo</SelectItem>
   <SelectItem value="in-progress">In Progress</SelectItem>
@@ -296,7 +295,6 @@ import { SelectItem } from '~/components/ui/select'
 ```tsx
 import { RadioGroup } from '~/components/conform'
 import { RadioGroupItem } from '~/components/ui/radio-group'
-
 ;<RadioGroup {...fields.priority.radioGroupProps}>
   <div className="flex items-center space-x-2">
     <RadioGroupItem value="low" id="low" />
@@ -511,7 +509,6 @@ Simple layout components:
 
 ```tsx
 import { Field, FieldError } from '~/components/conform'
-
 ;<Field>
   <Label htmlFor={fields.email.id}>Email</Label>
   <Input {...fields.email.inputProps} type="email" />
