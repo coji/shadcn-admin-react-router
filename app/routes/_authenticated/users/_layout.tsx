@@ -1,12 +1,6 @@
 import { IconMailPlus, IconUserPlus } from '@tabler/icons-react'
 import { href, Link, Outlet } from 'react-router'
-import { Header } from '~/components/layout/header'
-import { Main } from '~/components/layout/main'
-import { ProfileDropdown } from '~/components/profile-dropdown'
-import { Search } from '~/components/search'
-import { ThemeSwitch } from '~/components/theme-switch'
 import { Button } from '~/components/ui/button'
-import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import { columns } from './+components/users-columns'
 import { UsersTable } from './+components/users-table'
@@ -61,58 +55,46 @@ export const loader = ({ request }: Route.LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => ({ label: 'Users', to: '/users' }),
+  headerFixed: true,
 }
 
 export default function Users({
   loaderData: { users, pagination, facetedCounts },
 }: Route.ComponentProps) {
-  const { Breadcrumbs } = useBreadcrumbs()
   useSmartNavigation({ autoSave: true, baseUrl: href('/users') })
 
   return (
     <>
-      <Header fixed>
-        <Search />
-        <div className="ml-auto flex items-center gap-4">
-          <ThemeSwitch />
-          <ProfileDropdown />
+      <div className="mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">User List</h1>
+          <p className="text-muted-foreground">
+            Manage your users and their roles here.
+          </p>
         </div>
-      </Header>
-
-      <Breadcrumbs />
-
-      <Main>
-        <div className="mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">User List</h1>
-            <p className="text-muted-foreground">
-              Manage your users and their roles here.
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" className="space-x-1" asChild>
-              <Link to={href('/users/invite')}>
-                <span>Invite User</span> <IconMailPlus size={18} />
-              </Link>
-            </Button>
-            <Button className="space-x-1" asChild>
-              <Link to={href('/users/add')}>
-                <span>Add User</span> <IconUserPlus size={18} />
-              </Link>
-            </Button>
-          </div>
+        <div className="flex gap-2">
+          <Button variant="outline" className="space-x-1" asChild>
+            <Link to={href('/users/invite')}>
+              <span>Invite User</span> <IconMailPlus size={18} />
+            </Link>
+          </Button>
+          <Button className="space-x-1" asChild>
+            <Link to={href('/users/add')}>
+              <span>Add User</span> <IconUserPlus size={18} />
+            </Link>
+          </Button>
         </div>
-        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
-          <UsersTable
-            data={users}
-            columns={columns}
-            pagination={pagination}
-            facetedCounts={facetedCounts}
-          />
-        </div>
+      </div>
+      <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
+        <UsersTable
+          data={users}
+          columns={columns}
+          pagination={pagination}
+          facetedCounts={facetedCounts}
+        />
+      </div>
 
-        <Outlet />
-      </Main>
+      <Outlet />
     </>
   )
 }
