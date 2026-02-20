@@ -93,6 +93,7 @@ export default function Users({
           </Button>
         </PageHeaderActions>
       </PageHeader>
+      {/* Breakout: negate Main's px-4 so the table can use full width */}
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
         <UsersTable
           data={users}
