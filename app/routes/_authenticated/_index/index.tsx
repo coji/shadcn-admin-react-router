@@ -18,24 +18,34 @@ import { ReportsTab } from './+components/reports-tab'
 
 const topNav = [
   {
-    title: 'Overview',
+    title: 'Dashboard',
     href: href('/'),
     disabled: false,
   },
   {
-    title: 'Customers',
-    href: '/customers',
-    disabled: true,
+    title: 'Tasks',
+    href: href('/tasks'),
+    disabled: false,
   },
   {
-    title: 'Products',
-    href: '/products',
-    disabled: true,
+    title: 'Apps',
+    href: href('/apps'),
+    disabled: false,
+  },
+  {
+    title: 'Chats',
+    href: href('/chats'),
+    disabled: false,
+  },
+  {
+    title: 'Users',
+    href: href('/users'),
+    disabled: false,
   },
   {
     title: 'Settings',
     href: href('/settings'),
-    disabled: true,
+    disabled: false,
   },
 ]
 
