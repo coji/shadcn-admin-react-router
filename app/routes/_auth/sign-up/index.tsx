@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout } from 'node:timers/promises'
 import { href, Link } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
@@ -8,17 +8,21 @@ import { formSchema } from './+schema'
 import type { Route } from './+types/index'
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const submission = parseWithZod(await request.formData(), {
-    schema: formSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
+  const submission = parseSubmission(await request.formData())
+  const result = formSchema.safeParse(submission.payload)
+
+  if (!result.success) {
+    return {
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
   }
 
-  if (submission.value.email === 'name@example.com') {
+  if (result.data.email === 'name@example.com') {
     return {
-      lastResult: submission.reply({
-        formErrors: ['User already exists with this email address'],
+      result: report(submission, {
+        error: {
+          formErrors: ['User already exists with this email address'],
+        },
       }),
     }
   }

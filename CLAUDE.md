@@ -40,12 +40,14 @@ Uses **`react-router-auto-routes`** for file-system routing (configured in `app/
 - **`app/components/`** — Shared app components (command-menu, confirm-dialog, search, theme-switch, profile-dropdown).
 - **`app/context/`** — React contexts (search-context).
 - **`app/hooks/`** — Shared hooks (use-debounce, use-dialog-state, use-mobile, use-smart-navigation).
+- **`app/lib/forms.ts`** — `configureForms()` with prop-spreaders (`inputProps`, `selectProps`, etc.) and schema constraint forwarding.
 - **`app/lib/utils.ts`** — `cn()` helper (clsx + tailwind-merge).
+- **`app/components/conform/`** — Conform + shadcn/ui wrappers using `useControl` (Select, Checkbox, Switch, RadioGroup, DatePicker, Field, FieldError).
 - **`app/data/`** — Sidebar navigation config and static data.
 
 ### Key patterns
 
-- **Forms:** Conform (`@conform-to/react` + `@conform-to/zod`) for form validation with Zod schemas.
+- **Forms:** Conform future API (`@conform-to/react/future` + `@conform-to/zod/v4/future`). `app/lib/forms.ts` defines `configureForms()` with typed prop-spreaders. `app/components/conform/` provides shadcn/ui wrappers (Select, Checkbox, Switch, RadioGroup, DatePicker). See `docs/conform-future-api.md` for details.
 - **Toasts:** `remix-toast` (server-side) + `sonner` (client-side). Toast data flows through root loader.
 - **Theming:** `next-themes` ThemeProvider with class-based dark mode.
 - **Tables:** `@tanstack/react-table` for data tables (see tasks and users routes).

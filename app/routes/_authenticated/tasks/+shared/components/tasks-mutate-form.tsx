@@ -1,73 +1,104 @@
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
-import { Form, href, Link, useNavigation } from 'react-router'
+import type { SubmissionResult } from '@conform-to/react/future'
+import { coerceFormValue } from '@conform-to/zod/v4/future'
+import { Form, href, Link, useActionData, useNavigation } from 'react-router'
 import { z } from 'zod'
+import {
+  RadioGroup as ConformRadioGroup,
+  Select as ConformSelect,
+} from '~/components/conform'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
+import { RadioGroupItem } from '~/components/ui/radio-group'
+import { SelectItem } from '~/components/ui/select'
 import { Separator } from '~/components/ui/separator'
 import { HStack } from '~/components/ui/stack'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
+import { useForm } from '~/lib/forms'
 import type { Task } from '../data/schema'
 
-export const createSchema = z.object({
-  intent: z.literal('create'),
-  title: z
-    .string({
-      error: 'Title is required.',
-    })
-    .trim()
-    .min(1, 'Title is required.'),
-  status: z.string({ error: 'Please select a status.' }),
-  label: z.string({ error: 'Please select a label.' }),
-  priority: z.string({ error: 'Please choose a priority.' }),
-})
+export const createSchema = coerceFormValue(
+  z.object({
+    intent: z.literal('create'),
+    title: z
+      .string({
+        error: 'Title is required.',
+      })
+      .trim()
+      .min(1, 'Title is required.'),
+    status: z.string({ error: 'Please select a status.' }),
+    label: z.string({ error: 'Please select a label.' }),
+    priority: z.string({ error: 'Please choose a priority.' }),
+  }),
+)
 
-export const updateSchema = z.object({
-  intent: z.literal('update'),
-  id: z.string(),
-  title: z
-    .string({ error: 'Title is required.' })
-    .trim()
-    .min(1, 'Title is required.'),
-  status: z.string({ error: 'Please select a status.' }),
-  label: z.string({ error: 'Please select a label.' }),
-  priority: z.string({ error: 'Please choose a priority.' }),
-})
+export const updateSchema = coerceFormValue(
+  z.object({
+    intent: z.literal('update'),
+    id: z.string(),
+    title: z
+      .string({ error: 'Title is required.' })
+      .trim()
+      .min(1, 'Title is required.'),
+    status: z.string({ error: 'Please select a status.' }),
+    label: z.string({ error: 'Please select a label.' }),
+    priority: z.string({ error: 'Please choose a priority.' }),
+  }),
+)
 
-const formSchema = z.discriminatedUnion('intent', [createSchema, updateSchema])
+const formSchema = coerceFormValue(
+  z.discriminatedUnion('intent', [
+    z.object({
+      intent: z.literal('create'),
+      title: z
+        .string({ error: 'Title is required.' })
+        .trim()
+        .min(1, 'Title is required.'),
+      status: z.string({ error: 'Please select a status.' }),
+      label: z.string({ error: 'Please select a label.' }),
+      priority: z.string({ error: 'Please choose a priority.' }),
+    }),
+    z.object({
+      intent: z.literal('update'),
+      id: z.string(),
+      title: z
+        .string({ error: 'Title is required.' })
+        .trim()
+        .min(1, 'Title is required.'),
+      status: z.string({ error: 'Please select a status.' }),
+      label: z.string({ error: 'Please select a label.' }),
+      priority: z.string({ error: 'Please choose a priority.' }),
+    }),
+  ]),
+)
 
 export function TasksMutateForm({ task }: { task?: Task }) {
   const isUpdate = !!task
-  const [form, fields] = useForm({
+  const actionData = useActionData<{ result: SubmissionResult }>()
+  const { form, fields } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: task ?? {
       title: '',
       status: '',
       label: '',
       priority: '',
     },
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: formSchema }),
-    shouldRevalidate: 'onBlur',
   })
   const navigation = useNavigation()
   const { backUrl } = useSmartNavigation({ baseUrl: href('/tasks') })
 
   return (
-    <Form method="POST" {...getFormProps(form)} className="space-y-5">
-      <input {...getInputProps(fields.id, { type: 'hidden' })} />
+    <Form method="POST" {...form.props} className="space-y-5">
+      <input
+        type="hidden"
+        name={fields.id.name}
+        defaultValue={fields.id.defaultValue}
+      />
       <div className="space-y-1">
         <Label htmlFor={fields.title.id}>Title</Label>
         <Input
-          {...getInputProps(fields.title, { type: 'text' })}
+          {...fields.title.inputProps}
+          type="text"
           placeholder="Enter a title"
         />
         <div
@@ -80,27 +111,16 @@ export function TasksMutateForm({ task }: { task?: Task }) {
 
       <div className="space-y-1">
         <Label htmlFor={fields.status.id}>Status</Label>
-        <Select
-          name={fields.status.name}
-          defaultValue={fields.status.initialValue}
-          onValueChange={(value) => {
-            form.update({
-              name: fields.status.name,
-              value,
-            })
-          }}
+        <ConformSelect
+          {...fields.status.selectProps}
+          placeholder="Select dropdown"
         >
-          <SelectTrigger id={fields.status.id}>
-            <SelectValue placeholder="Select dropdown" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="in progress">In Progress</SelectItem>
-            <SelectItem value="backlog">Backlog</SelectItem>
-            <SelectItem value="todo">Todo</SelectItem>
-            <SelectItem value="canceled">Canceled</SelectItem>
-            <SelectItem value="done">Done</SelectItem>
-          </SelectContent>
-        </Select>
+          <SelectItem value="in progress">In Progress</SelectItem>
+          <SelectItem value="backlog">Backlog</SelectItem>
+          <SelectItem value="todo">Todo</SelectItem>
+          <SelectItem value="canceled">Canceled</SelectItem>
+          <SelectItem value="done">Done</SelectItem>
+        </ConformSelect>
         <div
           id={fields.status.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
@@ -111,17 +131,7 @@ export function TasksMutateForm({ task }: { task?: Task }) {
 
       <div className="space-y-3">
         <Label htmlFor={fields.label.id}>Label</Label>
-        <RadioGroup
-          name={fields.label.name}
-          defaultValue={fields.label.initialValue}
-          onValueChange={(value) => {
-            form.update({
-              name: fields.label.name,
-              value,
-            })
-          }}
-          className="gap-3"
-        >
+        <ConformRadioGroup {...fields.label.radioGroupProps} className="gap-3">
           <HStack className="gap-3">
             <RadioGroupItem id="documentation" value="documentation" />
             <Label htmlFor="documentation" className="font-normal">
@@ -140,7 +150,7 @@ export function TasksMutateForm({ task }: { task?: Task }) {
               Bug
             </Label>
           </HStack>
-        </RadioGroup>
+        </ConformRadioGroup>
         <div
           id={fields.label.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
@@ -151,15 +161,8 @@ export function TasksMutateForm({ task }: { task?: Task }) {
 
       <div className="space-y-3">
         <Label htmlFor={fields.priority.id}>Priority</Label>
-        <RadioGroup
-          name={fields.priority.name}
-          defaultValue={fields.priority.initialValue}
-          onValueChange={(value) => {
-            form.update({
-              name: fields.priority.name,
-              value,
-            })
-          }}
+        <ConformRadioGroup
+          {...fields.priority.radioGroupProps}
           className="gap-3"
         >
           <HStack className="gap-3">
@@ -180,7 +183,7 @@ export function TasksMutateForm({ task }: { task?: Task }) {
               Low
             </Label>
           </HStack>
-        </RadioGroup>
+        </ConformRadioGroup>
         <div
           id={fields.priority.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"

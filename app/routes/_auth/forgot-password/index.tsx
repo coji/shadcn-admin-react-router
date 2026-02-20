@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout } from 'node:timers/promises'
 import { href, Link } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
@@ -8,22 +8,27 @@ import { formSchema } from './+schema'
 import type { Route } from './+types/index'
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const submission = parseWithZod(await request.formData(), {
-    schema: formSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
-  }
-  if (submission.value.email !== 'name@example.com') {
+  const submission = parseSubmission(await request.formData())
+  const result = formSchema.safeParse(submission.payload)
+
+  if (!result.success) {
     return {
-      lastResult: submission.reply({
-        formErrors: ['Email not found in our records. Please try again.'],
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
+  }
+
+  if (result.data.email !== 'name@example.com') {
+    return {
+      result: report(submission, {
+        error: {
+          formErrors: ['Email not found in our records. Please try again.'],
+        },
       }),
     }
   }
   await setTimeout(1000)
   return dataWithSuccess(
-    { lastResult: submission.reply({ resetForm: true }) },
+    { result: report(submission, { reset: true }) },
     {
       message: 'Password reset link sent to your email',
     },

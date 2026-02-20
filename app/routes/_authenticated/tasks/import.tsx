@@ -1,5 +1,5 @@
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
+import { coerceFormValue } from '@conform-to/zod/v4/future'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { Form, href, Link } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
@@ -10,28 +10,33 @@ import { Label } from '~/components/ui/label'
 import { Separator } from '~/components/ui/separator'
 import { HStack } from '~/components/ui/stack'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
+import { useForm } from '~/lib/forms'
 import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import type { Route } from './+types/import'
 
-export const formSchema = z.object({
-  file: z
-    .instanceof(File, { message: 'Please upload a file.' })
-    .refine(
-      (file) => ['text/csv'].includes(file.type),
-      'Please upload csv format.',
-    ),
-})
+export const formSchema = coerceFormValue(
+  z.object({
+    file: z
+      .instanceof(File, { message: 'Please upload a file.' })
+      .refine(
+        (file) => ['text/csv'].includes(file.type),
+        'Please upload csv format.',
+      ),
+  }),
+)
 
 export const handle: RouteHandle = {
   breadcrumb: () => ({ label: 'Import' }),
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const submission = parseWithZod(await request.formData(), {
-    schema: formSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
+  const submission = parseSubmission(await request.formData())
+  const result = formSchema.safeParse(submission.payload)
+
+  if (!result.success) {
+    return {
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
   }
 
   await sleep(1000)
@@ -39,15 +44,13 @@ export const action = async ({ request }: Route.ActionArgs) => {
   // Create a new task
   return redirectWithSuccess('tasks', {
     message: 'Tasks imported successfully.',
-    description: JSON.stringify(submission.value),
+    description: JSON.stringify(result.data),
   })
 }
 
 export default function TaskImport() {
-  const [form, { file }] = useForm<z.infer<typeof formSchema>>({
+  const { form, fields } = useForm(formSchema, {
     defaultValue: { file: undefined },
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: formSchema }),
   })
   const { backUrl } = useSmartNavigation({ baseUrl: href('/tasks') })
 
@@ -62,15 +65,15 @@ export default function TaskImport() {
 
       <Separator className="my-4 lg:my-6" />
 
-      <Form {...getFormProps(form)}>
+      <Form method="POST" {...form.props}>
         <div className="mb-2 space-y-1">
-          <Label htmlFor={file.id}>File</Label>
-          <Input {...getInputProps(file, { type: 'file' })} />
+          <Label htmlFor={fields.file.id}>File</Label>
+          <Input {...fields.file.inputProps} type="file" />
           <div
-            id={file.errorId}
+            id={fields.file.errorId}
             className="text-destructive text-[0.8rem] font-medium empty:hidden"
           >
-            {file.errors}
+            {fields.file.errors}
           </div>
         </div>
 

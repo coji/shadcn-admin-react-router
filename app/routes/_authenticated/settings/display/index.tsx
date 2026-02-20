@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
 import type { RouteHandle } from '~/routes/_authenticated/_layout'
@@ -12,11 +12,13 @@ export const handle: RouteHandle = {
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const submission = parseWithZod(await request.formData(), {
-    schema: displayFormSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
+  const submission = parseSubmission(await request.formData())
+  const result = displayFormSchema.safeParse(submission.payload)
+
+  if (!result.success) {
+    return {
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
   }
 
   // Save the form data to the database or API.
@@ -24,11 +26,11 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   return dataWithSuccess(
     {
-      lastResult: submission.reply({ resetForm: true }),
+      result: report(submission, { reset: true }),
     },
     {
       message: 'Display settings updated.',
-      description: JSON.stringify(submission.value, null, 2),
+      description: JSON.stringify(result.data, null, 2),
     },
   )
 }
