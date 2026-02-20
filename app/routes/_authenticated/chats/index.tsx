@@ -20,12 +20,13 @@ import { ScrollArea } from '~/components/ui/scroll-area'
 import { Separator } from '~/components/ui/separator'
 import { cn } from '~/lib/utils'
 // Fake Data
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import { conversations } from './+data/convo.json'
 
 type ChatUser = (typeof conversations)[number]
 type Convo = ChatUser['messages'][number]
 
-export const handle = {
+export const handle: RouteHandle = {
   breadcrumb: () => ({ label: 'Chats' }),
   mainFixed: true,
 }

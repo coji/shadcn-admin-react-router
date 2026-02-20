@@ -10,6 +10,7 @@ import { Label } from '~/components/ui/label'
 import { Separator } from '~/components/ui/separator'
 import { HStack } from '~/components/ui/stack'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import type { Route } from './+types/import'
 
 export const formSchema = z.object({
@@ -21,7 +22,7 @@ export const formSchema = z.object({
     ),
 })
 
-export const handle = {
+export const handle: RouteHandle = {
   breadcrumb: () => ({ label: 'Import' }),
 }
 

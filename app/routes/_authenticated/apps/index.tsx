@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '~/components/ui/select'
 import { Separator } from '~/components/ui/separator'
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import { apps } from './+data/apps'
 
 const appText = new Map<string, string>([
@@ -22,7 +23,7 @@ const appText = new Map<string, string>([
   ['notConnected', 'Not Connected'],
 ])
 
-export const handle = {
+export const handle: RouteHandle = {
   breadcrumb: () => ({ label: 'Apps' }),
   mainFixed: true,
 }

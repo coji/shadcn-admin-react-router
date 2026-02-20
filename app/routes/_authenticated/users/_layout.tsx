@@ -2,6 +2,7 @@ import { IconMailPlus, IconUserPlus } from '@tabler/icons-react'
 import { href, Link, Outlet } from 'react-router'
 import { Button } from '~/components/ui/button'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import { columns } from './+components/users-columns'
 import { UsersTable } from './+components/users-table'
 import {
@@ -53,8 +54,8 @@ export const loader = ({ request }: Route.LoaderArgs) => {
   return { users, pagination, facetedCounts }
 }
 
-export const handle = {
-  breadcrumb: () => ({ label: 'Users', to: '/users' }),
+export const handle: RouteHandle = {
+  breadcrumb: () => ({ label: 'Users', to: href('/users') }),
   headerFixed: true,
 }
 

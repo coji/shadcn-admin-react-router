@@ -11,7 +11,7 @@ import { SearchProvider } from '~/context/search-context'
 import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import { cn } from '~/lib/utils'
 
-interface RouteHandle {
+export interface RouteHandle {
   breadcrumb?: (data?: unknown) => { label: string; to?: string }
   headerFixed?: boolean
   mainFixed?: boolean

@@ -5,12 +5,13 @@ import {
   IconTool,
   IconUser,
 } from '@tabler/icons-react'
-import { Outlet } from 'react-router'
+import { href, Outlet } from 'react-router'
 import { Separator } from '~/components/ui/separator'
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import SidebarNav from './+components/sidebar-nav'
 
-export const handle = {
-  breadcrumb: () => ({ label: 'Settings', to: '/settings' }),
+export const handle: RouteHandle = {
+  breadcrumb: () => ({ label: 'Settings', to: href('/settings') }),
 }
 
 export default function Settings() {

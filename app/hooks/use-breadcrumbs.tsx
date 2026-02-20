@@ -57,7 +57,7 @@ export const useBreadcrumbs = () => {
               <React.Fragment key={idx}>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  {item.to ? (
+                  {item.to && !item.isCurrentPage ? (
                     <BreadcrumbLink asChild>
                       <Link to={item.to}>{item.label}</Link>
                     </BreadcrumbLink>
