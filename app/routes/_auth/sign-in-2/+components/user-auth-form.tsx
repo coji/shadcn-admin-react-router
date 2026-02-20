@@ -2,7 +2,7 @@ import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod/v4'
 import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
 import type { HTMLAttributes } from 'react'
-import { Form, Link, useActionData, useNavigation } from 'react-router'
+import { Form, href, Link, useActionData, useNavigation } from 'react-router'
 import { PasswordInput } from '~/components/password-input'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
@@ -54,7 +54,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         <div className="flex items-center justify-between">
           <Label htmlFor={password.id}>Password</Label>
           <Link
-            to="/forgot-password"
+            to={href('/forgot-password')}
             className="text-muted-foreground text-sm font-medium hover:opacity-75"
           >
             Forgot password?

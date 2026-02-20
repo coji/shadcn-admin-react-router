@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router'
+import { href, Link, useNavigate } from 'react-router'
 import { Button } from '~/components/ui/button'
 
 export default function NotFoundError() {
@@ -17,7 +17,7 @@ export default function NotFoundError() {
             Go Back
           </Button>
           <Button asChild>
-            <Link to="/">Back to Home</Link>
+            <Link to={href('/')}>Back to Home</Link>
           </Button>
         </div>
       </div>

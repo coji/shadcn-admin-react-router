@@ -11,7 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import type { User } from '../../+shared/data/schema'
+import type { User } from '../+shared/data/schema'
 
 interface DataTableRowActionsProps {
   row: Row<User>
@@ -29,7 +29,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
+      <DropdownMenuContent align="end" className="w-40">
         <DropdownMenuItem asChild>
           <Link to={href('/users/:user/update', { user: row.original.id })}>
             Edit

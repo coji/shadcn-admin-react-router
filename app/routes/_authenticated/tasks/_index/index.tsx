@@ -1,11 +1,18 @@
 import { IconDownload, IconPlus } from '@tabler/icons-react'
 import { href, Link } from 'react-router'
+import {
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderDescription,
+  PageHeaderHeading,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
 import { Button } from '~/components/ui/button'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import { DataTable } from './+components/data-table'
 import { columns, parseQueryParams } from './+config'
 import { getFacetedCounts, listFilteredTasks } from './+queries.server'
-import type { Route } from './+types/_layout'
+import type { Route } from './+types/index'
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const { search, filters, page, perPage, sortBy, sortOrder } =
@@ -41,15 +48,15 @@ export default function Tasks({
   useSmartNavigation({ autoSave: true, baseUrl: href('/tasks') })
 
   return (
-    <div>
-      <div className="mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Tasks</h2>
-          <p className="text-muted-foreground">
+    <>
+      <PageHeader>
+        <PageHeaderHeading>
+          <PageHeaderTitle>Tasks</PageHeaderTitle>
+          <PageHeaderDescription>
             Here&apos;s a list of your tasks for this month!
-          </p>
-        </div>
-        <div className="flex gap-2">
+          </PageHeaderDescription>
+        </PageHeaderHeading>
+        <PageHeaderActions>
           <Button variant="outline" className="space-x-1" asChild>
             <Link to={href('/tasks/import')}>
               <span>Import</span> <IconDownload size={18} />
@@ -60,9 +67,10 @@ export default function Tasks({
               <span>Create</span> <IconPlus size={18} />
             </Link>
           </Button>
-        </div>
-      </div>
+        </PageHeaderActions>
+      </PageHeader>
 
+      {/* Breakout: negate Main's px-4 so the table can use full width */}
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
         <DataTable
           data={tasks}
@@ -71,6 +79,6 @@ export default function Tasks({
           facetedCounts={facetedCounts}
         />
       </div>
-    </div>
+    </>
   )
 }

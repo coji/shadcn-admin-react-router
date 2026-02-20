@@ -3,6 +3,7 @@ import { setTimeout as sleep } from 'node:timers/promises'
 import { href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { Separator } from '~/components/ui/separator'
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import {
   TasksMutateForm,
   createSchema,
@@ -10,7 +11,7 @@ import {
 import { tasks } from './+shared/data/tasks'
 import type { Route } from './+types/create'
 
-export const handle = {
+export const handle: RouteHandle = {
   breadcrumb: () => ({ label: 'Create' }),
 }
 

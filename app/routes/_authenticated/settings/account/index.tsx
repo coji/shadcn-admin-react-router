@@ -1,10 +1,15 @@
 import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import ContentSection from '../+components/content-section'
 import { AccountForm } from './+account-form'
 import { accountFormSchema } from './+schema'
 import type { Route } from './+types/index'
+
+export const handle: RouteHandle = {
+  breadcrumb: () => ({ label: 'Account' }),
+}
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const submission = parseWithZod(await request.formData(), {

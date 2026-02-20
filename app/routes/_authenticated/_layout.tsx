@@ -1,10 +1,29 @@
-import { Outlet } from 'react-router'
+import { Outlet, useMatches } from 'react-router'
 import { AppSidebar } from '~/components/layout/app-sidebar'
+import { Header } from '~/components/layout/header'
+import { Main } from '~/components/layout/main'
+import { ProfileDropdown } from '~/components/layout/profile-dropdown'
+import { Search } from '~/components/layout/search'
+import { ThemeSwitch } from '~/components/layout/theme-switch'
 import { SidebarProvider } from '~/components/ui/sidebar'
 import { SearchProvider } from '~/context/search-context'
+import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import { cn } from '~/lib/utils'
 
+export interface RouteHandle {
+  breadcrumb?: (data?: unknown) => { label: string; to?: string }
+  headerFixed?: boolean
+  mainFixed?: boolean
+}
+
 export default function DashboardLayout() {
+  const { Breadcrumbs } = useBreadcrumbs()
+  const matches = useMatches()
+  const handle = matches.reduce<Record<string, unknown>>((acc, m) => {
+    if (m.handle && typeof m.handle === 'object') Object.assign(acc, m.handle)
+    return acc
+  }, {}) as RouteHandle
+
   return (
     <SearchProvider>
       <SidebarProvider>
@@ -21,7 +40,17 @@ export default function DashboardLayout() {
             'has-[main.fixed-main]:group-data-[scroll-locked=1]/body:h-svh',
           )}
         >
-          <Outlet />
+          <Header fixed={handle.headerFixed}>
+            <Search />
+            <div className="ml-auto flex items-center gap-4">
+              <ThemeSwitch />
+              <ProfileDropdown />
+            </div>
+          </Header>
+          <Breadcrumbs />
+          <Main fixed={handle.mainFixed}>
+            <Outlet />
+          </Main>
         </div>
       </SidebarProvider>
     </SearchProvider>

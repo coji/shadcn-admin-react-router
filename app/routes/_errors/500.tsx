@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router'
+import { href, Link, useNavigate } from 'react-router'
 import { Button } from '~/components/ui/button'
 import { cn } from '~/lib/utils'
 
@@ -31,7 +31,7 @@ export default function GeneralError({
               Go Back
             </Button>
             <Button asChild>
-              <Link to="/">Back to Home</Link>
+              <Link to={href('/')}>Back to Home</Link>
             </Button>
           </div>
         )}

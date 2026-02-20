@@ -1,6 +1,6 @@
 import { getFormProps, useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod/v4'
-import { Form, Link, useActionData, useNavigation } from 'react-router'
+import { Form, href, Link, useActionData, useNavigation } from 'react-router'
 import type { z } from 'zod'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
@@ -180,7 +180,7 @@ export function NotificationsForm() {
           <div className="text-muted-foreground text-[0.8rem]">
             You can manage your mobile notifications in the{' '}
             <Link
-              to="/settings"
+              to={href('/settings')}
               className="underline decoration-dashed underline-offset-4 hover:decoration-solid"
             >
               mobile settings

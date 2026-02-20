@@ -40,7 +40,7 @@ export const SearchInput = ({
         isImeOn.current = false
         handleChange((e.target as HTMLInputElement).value)
       }}
-      className={cn('h-8 w-[150px] lg:w-[250px]')}
+      className={cn('h-8 w-37.5 lg:w-62.5')}
       {...rest}
     />
   )

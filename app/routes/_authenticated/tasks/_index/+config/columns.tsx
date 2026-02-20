@@ -19,7 +19,7 @@ export const columns: ColumnDef<Task>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
-        className="translate-y-[2px]"
+        className="translate-y-0.5"
       />
     ),
     cell: ({ row }) => (
@@ -27,7 +27,7 @@ export const columns: ColumnDef<Task>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
-        className="translate-y-[2px]"
+        className="translate-y-0.5"
       />
     ),
     enableSorting: false,
@@ -38,7 +38,7 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Task" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('id')}</div>,
+    cell: ({ row }) => <div className="w-20">{row.getValue('id')}</div>,
     enableSorting: false,
     enableHiding: false,
   },
@@ -59,7 +59,7 @@ export const columns: ColumnDef<Task>[] = [
             </Badge>
           )}
 
-          <span className="max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]">
+          <span className="max-w-32 truncate font-medium sm:max-w-72 md:max-w-124">
             {row.getValue('title')}
           </span>
         </div>
@@ -81,7 +81,7 @@ export const columns: ColumnDef<Task>[] = [
       }
 
       return (
-        <div className="flex w-[100px] items-center">
+        <div className="flex w-25 items-center">
           {status.icon && (
             <status.icon className="text-muted-foreground mr-2 h-4 w-4" />
           )}

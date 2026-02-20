@@ -6,7 +6,7 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod/v4'
 import { XIcon } from 'lucide-react'
-import { Form, Link, useActionData, useNavigation } from 'react-router'
+import { Form, href, Link, useActionData, useNavigation } from 'react-router'
 import type { z } from 'zod'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
@@ -91,7 +91,7 @@ export default function ProfileForm() {
         </Select>
         <div className="text-muted-foreground text-[0.8rem]">
           You can manage verified email addresses in your{' '}
-          <Link to="/">email settings</Link>.
+          <Link to={href('/')}>email settings</Link>.
         </div>
         <div
           id={fields.email.errorId}

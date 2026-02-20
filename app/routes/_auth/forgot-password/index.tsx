@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
-import { Link } from 'react-router'
+import { href, Link } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
 import { Card } from '~/components/ui/card'
 import { ForgotForm } from './+components/forgot-password-form'
@@ -46,7 +46,7 @@ export default function ForgotPassword() {
       <p className="text-muted-foreground mt-4 px-8 text-center text-sm">
         Don't have an account?{' '}
         <Link
-          to="/sign-up"
+          to={href('/sign-up')}
           className="hover:text-primary underline underline-offset-4"
         >
           Sign up

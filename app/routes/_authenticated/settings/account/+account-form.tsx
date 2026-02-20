@@ -82,7 +82,7 @@ export function AccountForm() {
               id={fields.dob.id}
               variant="outline"
               className={cn(
-                'w-[240px] pl-3 text-left font-normal',
+                'w-60 pl-3 text-left font-normal',
                 !fields.dob.value && 'text-muted-foreground',
               )}
             >
@@ -134,7 +134,7 @@ export function AccountForm() {
               variant="outline"
               role="combobox"
               className={cn(
-                'w-[200px] justify-between',
+                'w-50 justify-between',
                 !fields.language.value && 'text-muted-foreground',
               )}
             >
@@ -146,7 +146,7 @@ export function AccountForm() {
               <CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
+          <PopoverContent className="w-50 p-0">
             <Command>
               <CommandInput placeholder="Search language..." />
               <CommandEmpty>No language found.</CommandEmpty>
