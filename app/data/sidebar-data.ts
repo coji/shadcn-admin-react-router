@@ -20,6 +20,7 @@ import {
   IconUsers,
 } from '@tabler/icons-react'
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
+import { href } from 'react-router'
 import type { SidebarData } from '../components/layout/types'
 
 export const sidebarData: SidebarData = {
@@ -51,28 +52,28 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'Dashboard',
-          url: '/',
+          url: href('/'),
           icon: IconLayoutDashboard,
         },
         {
           title: 'Tasks',
-          url: '/tasks',
+          url: href('/tasks'),
           icon: IconChecklist,
         },
         {
           title: 'Apps',
-          url: '/apps',
+          url: href('/apps'),
           icon: IconPackages,
         },
         {
           title: 'Chats',
-          url: '/chats',
+          url: href('/chats'),
           badge: '3',
           icon: IconMessages,
         },
         {
           title: 'Users',
-          url: '/users',
+          url: href('/users'),
           icon: IconUsers,
         },
       ],
@@ -86,23 +87,23 @@ export const sidebarData: SidebarData = {
           items: [
             {
               title: 'Sign In',
-              url: '/sign-in',
+              url: href('/sign-in'),
             },
             {
               title: 'Sign In (2 Col)',
-              url: '/sign-in-2',
+              url: href('/sign-in-2'),
             },
             {
               title: 'Sign Up',
-              url: '/sign-up',
+              url: href('/sign-up'),
             },
             {
               title: 'Forgot Password',
-              url: '/forgot-password',
+              url: href('/forgot-password'),
             },
             {
               title: 'OTP',
-              url: '/otp',
+              url: href('/otp'),
             },
           ],
         },
@@ -112,27 +113,27 @@ export const sidebarData: SidebarData = {
           items: [
             {
               title: 'Unauthorized',
-              url: '/401',
+              url: href('/401'),
               icon: IconLock,
             },
             {
               title: 'Forbidden',
-              url: '/403',
+              url: href('/403'),
               icon: IconUserOff,
             },
             {
               title: 'Not Found',
-              url: '/404',
+              url: href('/404'),
               icon: IconError404,
             },
             {
               title: 'Internal Server Error',
-              url: '/500',
+              url: href('/500'),
               icon: IconServerOff,
             },
             {
               title: 'Maintenance Error',
-              url: '/503',
+              url: href('/503'),
               icon: IconBarrierBlock,
             },
           ],
@@ -148,34 +149,34 @@ export const sidebarData: SidebarData = {
           items: [
             {
               title: 'Profile',
-              url: '/settings',
+              url: href('/settings'),
               icon: IconUserCog,
             },
             {
               title: 'Account',
-              url: '/settings/account',
+              url: href('/settings/account'),
               icon: IconTool,
             },
             {
               title: 'Appearance',
-              url: '/settings/appearance',
+              url: href('/settings/appearance'),
               icon: IconPalette,
             },
             {
               title: 'Notifications',
-              url: '/settings/notifications',
+              url: href('/settings/notifications'),
               icon: IconNotification,
             },
             {
               title: 'Display',
-              url: '/settings/display',
+              url: href('/settings/display'),
               icon: IconBrowserCheck,
             },
           ],
         },
         {
           title: 'Help Center',
-          url: '/help-center',
+          url: href('/help-center'),
           icon: IconHelp,
         },
       ],
