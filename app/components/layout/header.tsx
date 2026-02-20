@@ -20,26 +20,36 @@ export const Header = ({
       setOffset(document.body.scrollTop || document.documentElement.scrollTop)
     }
 
-    // Add scroll listener to the body
     document.addEventListener('scroll', onScroll, { passive: true })
 
-    // Clean up the event listener on unmount
     return () => document.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
     <header
       className={cn(
-        'bg-background flex items-center gap-3 px-4 py-1 sm:gap-4',
-        fixed && 'header-fixed peer/header fixed z-50 w-[inherit] rounded-md',
+        'z-50 h-16 shrink-0',
+        fixed && 'header-fixed peer/header sticky top-0 w-[inherit]',
         offset > 10 && fixed ? 'shadow-sm' : 'shadow-none',
         className,
       )}
       {...props}
     >
-      <SidebarTrigger variant="outline" className="scale-125 sm:scale-100" />
-      <Separator orientation="vertical" className="h-6" />
-      {children}
+      <div
+        className={cn(
+          'relative flex h-full items-center gap-3 p-4 sm:gap-4',
+          offset > 10 &&
+            fixed &&
+            'bg-background/80 after:absolute after:inset-0 after:-z-10 after:backdrop-blur-lg',
+        )}
+      >
+        <SidebarTrigger
+          variant="outline"
+          className="scale-125 sm:scale-100"
+        />
+        <Separator orientation="vertical" className="h-6" />
+        {children}
+      </div>
     </header>
   )
 }

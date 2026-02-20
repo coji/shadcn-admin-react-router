@@ -5,7 +5,7 @@ import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import { DataTable } from './+components/data-table'
 import { columns, parseQueryParams } from './+config'
 import { getFacetedCounts, listFilteredTasks } from './+queries.server'
-import type { Route } from './+types/_layout'
+import type { Route } from './+types/index'
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const { search, filters, page, perPage, sortBy, sortOrder } =
