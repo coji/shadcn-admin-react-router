@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod/v4'
 import { setTimeout } from 'node:timers/promises'
-import { Link } from 'react-router'
+import { href, Link } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { Card } from '~/components/ui/card'
 import { SignUpForm } from './+components/sign-up-form'
@@ -40,7 +40,7 @@ export default function SignUp() {
           Enter your email and password to create an account. <br />
           Already have an account?{' '}
           <Link
-            to="/sign-in"
+            to={href('/sign-in')}
             className="hover:text-primary underline underline-offset-4"
           >
             Sign In

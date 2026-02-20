@@ -1,3 +1,4 @@
+import { href } from 'react-router'
 import { TopNav } from '~/components/layout/top-nav'
 import { Button } from '~/components/ui/button'
 import {
@@ -18,7 +19,7 @@ import { ReportsTab } from './+components/reports-tab'
 const topNav = [
   {
     title: 'Overview',
-    href: '/',
+    href: href('/'),
     disabled: false,
   },
   {
@@ -33,7 +34,7 @@ const topNav = [
   },
   {
     title: 'Settings',
-    href: '/settings',
+    href: href('/settings'),
     disabled: true,
   },
 ]

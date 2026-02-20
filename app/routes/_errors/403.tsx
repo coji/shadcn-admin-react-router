@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router'
+import { href, Link, useNavigate } from 'react-router'
 import { Button } from '~/components/ui/button'
 
 export default function ForbiddenError() {
@@ -18,7 +18,7 @@ export default function ForbiddenError() {
             Go Back
           </Button>
           <Button asChild>
-            <Link to="/">Back to Home</Link>
+            <Link to={href('/')}>Back to Home</Link>
           </Button>
         </div>
       </div>
