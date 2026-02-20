@@ -11,7 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import type { User } from '../../+shared/data/schema'
+import type { User } from '../+shared/data/schema'
 
 interface DataTableRowActionsProps {
   row: Row<User>

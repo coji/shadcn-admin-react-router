@@ -16,7 +16,7 @@ import {
   SortSchema,
 } from './+hooks/use-data-table-state'
 import { getFacetedCounts, listFilteredUsers } from './+queries.server'
-import type { Route } from './+types/index'
+import type { Route } from './+types/_layout'
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const searchParams = new URLSearchParams(new URL(request.url).searchParams)
