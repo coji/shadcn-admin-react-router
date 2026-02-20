@@ -1,5 +1,3 @@
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
 import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
 import type { HTMLAttributes } from 'react'
 import { Form, useActionData, useNavigation } from 'react-router'
@@ -8,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { useForm } from '~/lib/forms'
 import { cn } from '~/lib/utils'
 import { formSchema } from '../+schema'
 import type { action } from '../index'
@@ -17,16 +16,13 @@ type SignUpFormProps = HTMLAttributes<HTMLFormElement>
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const actionData = useActionData<typeof action>()
 
-  const [form, { email, password, confirmPassword }] = useForm({
-    lastResult: actionData?.lastResult,
+  const { form, fields } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: {
       email: '',
       password: '',
       confirmPassword: '',
     },
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: formSchema }),
-    shouldRevalidate: 'onBlur',
   })
   const navigation = useNavigation()
   const isLoading = navigation.state === 'submitting'
@@ -34,49 +30,47 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
   return (
     <Form
       method="POST"
-      {...getFormProps(form)}
+      {...form.props}
       className={cn('grid gap-2', className)}
       {...props}
     >
       <div className="space-y-1">
-        <Label htmlFor={email.id}>Email</Label>
+        <Label htmlFor={fields.email.id}>Email</Label>
         <Input
-          {...getInputProps(email, { type: 'email' })}
+          {...fields.email.inputProps}
+          type="email"
           placeholder="name@example.com"
         />
         <div
-          id={email.errorId}
+          id={fields.email.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
         >
-          {email.errors}
+          {fields.email.errors}
         </div>
       </div>
 
       <div className="space-y-1">
-        <Label htmlFor={password.id}>Password</Label>
-        <PasswordInput
-          {...getInputProps(password, { type: 'password' })}
-          placeholder="********"
-        />
+        <Label htmlFor={fields.password.id}>Password</Label>
+        <PasswordInput {...fields.password.inputProps} placeholder="********" />
         <div
-          id={password.errorId}
+          id={fields.password.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
         >
-          {password.errors}
+          {fields.password.errors}
         </div>
       </div>
 
       <div className="space-y-1">
-        <Label htmlFor={confirmPassword.id}>Confirm Password</Label>
+        <Label htmlFor={fields.confirmPassword.id}>Confirm Password</Label>
         <PasswordInput
-          {...getInputProps(confirmPassword, { type: 'password' })}
+          {...fields.confirmPassword.inputProps}
           placeholder="********"
         />
         <div
-          id={confirmPassword.errorId}
+          id={fields.confirmPassword.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
         >
-          {confirmPassword.errors}
+          {fields.confirmPassword.errors}
         </div>
       </div>
 

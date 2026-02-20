@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout } from 'node:timers/promises'
 import { dataWithSuccess } from 'remix-toast'
 import type { RouteHandle } from '~/routes/_authenticated/_layout'
@@ -12,16 +12,19 @@ export const handle: RouteHandle = {
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const submission = parseWithZod(await request.formData(), {
-    schema: profileFormSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
-  }
-  if (submission.value.username !== 'shadcn') {
+  const submission = parseSubmission(await request.formData())
+  const result = profileFormSchema.safeParse(submission.payload)
+
+  if (!result.success) {
     return {
-      lastResult: submission.reply({
-        formErrors: ['Username must be shadcn'],
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
+  }
+
+  if (result.data.username !== 'shadcn') {
+    return {
+      result: report(submission, {
+        error: { formErrors: ['Username must be shadcn'] },
       }),
     }
   }
@@ -31,11 +34,11 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   return dataWithSuccess(
     {
-      lastResult: submission.reply({ resetForm: true }),
+      result: report(submission, { reset: true }),
     },
     {
       message: 'Profile updated!',
-      description: JSON.stringify(submission.value, null, 2),
+      description: JSON.stringify(result.data, null, 2),
     },
   )
 }

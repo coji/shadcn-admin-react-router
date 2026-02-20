@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { useState } from 'react'
 import { href } from 'react-router'
@@ -13,17 +13,19 @@ import type { Route } from './+types/add'
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const url = new URL(request.url)
-  const submission = parseWithZod(await request.formData(), {
-    schema: formSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
+  const submission = parseSubmission(await request.formData())
+  const result = formSchema.safeParse(submission.payload)
+
+  if (!result.success) {
+    return {
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
   }
 
   // Create a new task
   await sleep(1000)
   const newUser = {
-    ...submission.value,
+    ...result.data,
     createdAt: new Date(),
     updatedAt: new Date(),
     id: crypto.randomUUID(),

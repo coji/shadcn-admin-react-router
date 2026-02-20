@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
@@ -16,16 +16,18 @@ export const handle: RouteHandle = {
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const submission = parseWithZod(await request.formData(), {
-    schema: createSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
+  const submission = parseSubmission(await request.formData())
+  const result = createSchema.safeParse(submission.payload)
+
+  if (!result.success) {
+    return {
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
   }
 
   // Create a new task
   await sleep(1000)
-  const { intent: _intent, ...task } = submission.value
+  const { intent: _intent, ...task } = result.data
   const maxIdNumber = tasks.reduce((max, t) => {
     const idNumber = Number.parseInt(t.id.split('-')[1], 10)
     return idNumber > max ? idNumber : max
@@ -35,7 +37,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   return redirectWithSuccess(href('/tasks'), {
     message: 'Task created successfully',
-    description: JSON.stringify(submission.value),
+    description: JSON.stringify(result.data),
   })
 }
 

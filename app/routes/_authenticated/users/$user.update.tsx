@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { useState } from 'react'
 import { data, href } from 'react-router'
@@ -26,17 +26,19 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     throw data(null, { status: 404 })
   }
 
-  const submission = parseWithZod(await request.formData(), {
-    schema: formSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
+  const submission = parseSubmission(await request.formData())
+  const result = formSchema.safeParse(submission.payload)
+
+  if (!result.success) {
+    return {
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
   }
 
   // Update the user
   await sleep(1000)
   const updatedUser = {
-    ...submission.value,
+    ...result.data,
     id: user.id,
     createdAt: user.createdAt,
     status: user.status,

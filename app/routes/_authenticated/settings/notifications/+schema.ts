@@ -1,12 +1,15 @@
+import { coerceFormValue } from '@conform-to/zod/v4/future'
 import { z } from 'zod'
 
-export const notificationsFormSchema = z.object({
-  type: z.enum(['all', 'mentions', 'none'], {
-    error: 'You need to select a notification type.',
+export const notificationsFormSchema = coerceFormValue(
+  z.object({
+    type: z.enum(['all', 'mentions', 'none'], {
+      error: 'You need to select a notification type.',
+    }),
+    mobile: z.boolean().default(false).optional(),
+    communication_emails: z.boolean().default(false).optional(),
+    social_emails: z.boolean().default(false).optional(),
+    marketing_emails: z.boolean().default(false).optional(),
+    security_emails: z.boolean(),
   }),
-  mobile: z.boolean().default(false).optional(),
-  communication_emails: z.boolean().default(false).optional(),
-  social_emails: z.boolean().default(false).optional(),
-  marketing_emails: z.boolean().default(false).optional(),
-  security_emails: z.boolean(),
-})
+)

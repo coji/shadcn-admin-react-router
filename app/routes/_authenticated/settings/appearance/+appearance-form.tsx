@@ -1,41 +1,38 @@
-import { getFormProps, getSelectProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { Form, useActionData, useNavigation } from 'react-router'
-import type { z } from 'zod'
+import { RadioGroup as ConformRadioGroup } from '~/components/conform'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button, buttonVariants } from '~/components/ui/button'
 import { Label } from '~/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
+import { RadioGroupItem } from '~/components/ui/radio-group'
+import { useForm } from '~/lib/forms'
 import { cn } from '~/lib/utils'
 import { appearanceFormSchema } from './+schema'
 import type { action } from './index'
 
-type AppearanceFormValues = z.infer<typeof appearanceFormSchema>
-
 // This can come from your database or API.
-const defaultValue: Partial<AppearanceFormValues> = {
+const defaultValue = {
   theme: 'light',
 }
 
 export function AppearanceForm() {
   const actionData = useActionData<typeof action>()
-  const [form, fields] = useForm({
-    lastResult: actionData?.lastResult,
+  const { form, fields } = useForm(appearanceFormSchema, {
+    lastResult: actionData?.result,
     defaultValue,
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: appearanceFormSchema }),
-    shouldRevalidate: 'onBlur',
   })
   const navigation = useNavigation()
 
   return (
-    <Form method="POST" {...getFormProps(form)} className="space-y-8">
+    <Form method="POST" {...form.props} className="space-y-8">
       <div className="space-y-2">
         <Label htmlFor={fields.font.id}>Font</Label>
         <div className="relative w-max">
           <select
-            {...getSelectProps(fields.font)}
+            id={fields.font.id}
+            name={fields.font.name}
+            defaultValue={fields.font.defaultValue}
+            aria-describedby={fields.font.ariaDescribedBy}
             className={cn(
               buttonVariants({ variant: 'outline' }),
               'w-50 appearance-none font-normal',
@@ -64,16 +61,8 @@ export function AppearanceForm() {
           Select the theme for the dashboard.
         </div>
 
-        <RadioGroup
-          id={fields.theme.id}
-          name={fields.theme.name}
-          onValueChange={(value) => {
-            form.update({
-              name: fields.theme.name,
-              value,
-            })
-          }}
-          defaultValue={fields.theme.value}
+        <ConformRadioGroup
+          {...fields.theme.radioGroupProps}
           className="grid max-w-md grid-cols-2 gap-8 pt-2"
         >
           <Label className="[&:has([data-state=checked])>div]:border-primary">
@@ -126,7 +115,7 @@ export function AppearanceForm() {
               Dark
             </span>
           </Label>
-        </RadioGroup>
+        </ConformRadioGroup>
         <div
           id={fields.theme.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"

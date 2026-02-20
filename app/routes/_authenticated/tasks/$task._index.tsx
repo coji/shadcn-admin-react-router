@@ -1,4 +1,4 @@
-import { parseWithZod } from '@conform-to/zod/v4'
+import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { data } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
@@ -25,24 +25,26 @@ export const loader = ({ params }: Route.LoaderArgs) => {
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const url = new URL(request.url)
-  const submission = parseWithZod(await request.formData(), {
-    schema: updateSchema,
-  })
-  if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
+  const submission = parseSubmission(await request.formData())
+  const result = updateSchema.safeParse(submission.payload)
+
+  if (!result.success) {
+    return {
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
   }
 
   // Update the task
   await sleep(1000)
-  const taskIndex = tasks.findIndex((t) => t.id === submission.value.id)
+  const taskIndex = tasks.findIndex((t) => t.id === result.data.id)
   if (taskIndex === -1) {
     throw data(null, { status: 404, statusText: 'Task not found' })
   }
-  tasks.splice(taskIndex, 1, submission.value)
+  tasks.splice(taskIndex, 1, result.data)
 
   return redirectWithSuccess(`/tasks?${url.searchParams.toString()}`, {
     message: 'Task updated successfully',
-    description: `The task ${submission.value.id} has been updated.`,
+    description: `The task ${result.data.id} has been updated.`,
   })
 }
 

@@ -1,11 +1,10 @@
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
 import type { HTMLAttributes } from 'react'
 import { Form, useActionData, useNavigation } from 'react-router'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { useForm } from '~/lib/forms'
 import { cn } from '~/lib/utils'
 import { formSchema } from '../+schema'
 import type { action } from '../index'
@@ -14,33 +13,31 @@ type ForgotFormProps = HTMLAttributes<HTMLFormElement>
 
 export function ForgotForm({ className, ...props }: ForgotFormProps) {
   const actionData = useActionData<typeof action>()
-  const [form, { email }] = useForm({
-    lastResult: actionData?.lastResult,
+  const { form, fields } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: { email: '' },
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: formSchema }),
-    shouldRevalidate: 'onBlur',
   })
   const navigation = useNavigation()
 
   return (
     <Form
       method="POST"
-      {...getFormProps(form)}
+      {...form.props}
       className={cn('grid gap-2', className)}
       {...props}
     >
       <div className="space-y-1">
-        <Label htmlFor={email.id}>Email</Label>
+        <Label htmlFor={fields.email.id}>Email</Label>
         <Input
-          {...getInputProps(email, { type: 'email' })}
+          {...fields.email.inputProps}
+          type="email"
           placeholder="name@example.com"
         />
         <div
-          id={email.errorId}
+          id={fields.email.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
         >
-          {email.errors}
+          {fields.email.errors}
         </div>
       </div>
 

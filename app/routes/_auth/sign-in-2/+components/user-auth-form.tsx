@@ -1,5 +1,3 @@
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
 import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
 import type { HTMLAttributes } from 'react'
 import { Form, href, Link, useActionData, useNavigation } from 'react-router'
@@ -8,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
+import { useForm } from '~/lib/forms'
 import { cn } from '~/lib/utils'
 import { formSchema } from '../+schema'
 import type { action } from '../index'
@@ -16,15 +15,12 @@ type UserAuthFormProps = HTMLAttributes<HTMLFormElement>
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const actionData = useActionData<typeof action>()
-  const [form, { email, password }] = useForm({
-    lastResult: actionData?.lastResult,
+  const { form, fields } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: {
       email: '',
       password: '',
     },
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: formSchema }),
-    shouldRevalidate: 'onBlur',
   })
   const navigation = useNavigation()
   const isLoading = navigation.state === 'submitting'
@@ -32,27 +28,28 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   return (
     <Form
       method="POST"
-      {...getFormProps(form)}
+      {...form.props}
       className={cn('grid gap-2', className)}
       {...props}
     >
       <div className="space-y-1">
-        <Label htmlFor={email.id}>Email</Label>
+        <Label htmlFor={fields.email.id}>Email</Label>
         <Input
-          {...getInputProps(email, { type: 'email' })}
+          {...fields.email.inputProps}
+          type="email"
           placeholder="name@example.com"
         />
         <div
-          id={email.errorId}
+          id={fields.email.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
         >
-          {email.errors}
+          {fields.email.errors}
         </div>
       </div>
 
       <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <Label htmlFor={password.id}>Password</Label>
+          <Label htmlFor={fields.password.id}>Password</Label>
           <Link
             to={href('/forgot-password')}
             className="text-muted-foreground text-sm font-medium hover:opacity-75"
@@ -60,15 +57,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             Forgot password?
           </Link>
         </div>
-        <PasswordInput
-          {...getInputProps(password, { type: 'password' })}
-          placeholder="********"
-        />
+        <PasswordInput {...fields.password.inputProps} placeholder="********" />
         <div
-          id={password.errorId}
+          id={fields.password.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
         >
-          {password.errors}
+          {fields.password.errors}
         </div>
       </div>
 

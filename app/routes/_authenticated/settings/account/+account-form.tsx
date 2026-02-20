@@ -1,12 +1,10 @@
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
-import { CalendarIcon, CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
-import { format } from 'date-fns'
+import { useControl } from '@conform-to/react/future'
+import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
+import { useRef } from 'react'
 import { Form, useActionData, useNavigation } from 'react-router'
-import type { z } from 'zod'
+import { DatePicker } from '~/components/conform'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
-import { Calendar } from '~/components/ui/calendar'
 import {
   Command,
   CommandEmpty,
@@ -22,6 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '~/components/ui/popover'
+import { useForm } from '~/lib/forms'
 import { cn } from '~/lib/utils'
 import { accountFormSchema } from './+schema'
 import type { action } from './index'
@@ -38,29 +37,112 @@ const languages = [
   { label: 'Chinese', value: 'zh' },
 ] as const
 
-type AccountFormValues = z.infer<typeof accountFormSchema>
-
 // This can come from your database or API.
-const defaultValue: Partial<AccountFormValues> = {
+const defaultValue = {
   name: '',
+}
+
+function LanguageCombobox({
+  id,
+  name,
+  defaultValue,
+  'aria-describedby': ariaDescribedBy,
+}: {
+  id?: string
+  name: string
+  defaultValue?: string
+  'aria-describedby'?: string
+}) {
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const control = useControl({
+    defaultValue,
+    onFocus() {
+      triggerRef.current?.focus()
+    },
+  })
+
+  return (
+    <>
+      <input ref={control.register} name={name} hidden />
+      <Popover
+        onOpenChange={(open) => {
+          if (!open) {
+            control.blur()
+          }
+        }}
+      >
+        <PopoverTrigger asChild>
+          <Button
+            id={id}
+            ref={triggerRef}
+            variant="outline"
+            role="combobox"
+            aria-describedby={ariaDescribedBy}
+            className={cn(
+              'w-50 justify-between',
+              !control.value && 'text-muted-foreground',
+            )}
+          >
+            {control.value
+              ? languages.find((language) => language.value === control.value)
+                  ?.label
+              : 'Select language'}
+            <CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-50 p-0">
+          <Command>
+            <CommandInput placeholder="Search language..." />
+            <CommandEmpty>No language found.</CommandEmpty>
+            <CommandGroup>
+              <CommandList>
+                {languages.map((language) => (
+                  <CommandItem
+                    value={language.label}
+                    key={language.value}
+                    onSelect={(value) => {
+                      const selectedLanguage = languages.find(
+                        (lang) => lang.label === value,
+                      )
+                      if (!selectedLanguage) return
+                      control.change(selectedLanguage.value)
+                    }}
+                  >
+                    <CheckIcon
+                      className={cn(
+                        'h-4 w-4',
+                        language.value === control.value
+                          ? 'opacity-100'
+                          : 'opacity-0',
+                      )}
+                    />
+                    {language.label}
+                  </CommandItem>
+                ))}
+              </CommandList>
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </>
+  )
 }
 
 export function AccountForm() {
   const actionData = useActionData<typeof action>()
-  const [form, fields] = useForm<AccountFormValues>({
-    lastResult: actionData?.lastResult,
+  const { form, fields } = useForm(accountFormSchema, {
+    lastResult: actionData?.result,
     defaultValue,
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: accountFormSchema }),
   })
   const navigation = useNavigation()
 
   return (
-    <Form method="POST" {...getFormProps(form)} className="space-y-8">
+    <Form method="POST" {...form.props} className="space-y-8">
       <div className="space-y-2">
         <Label htmlFor={fields.name.id}>Name</Label>
         <Input
-          {...getInputProps(fields.name, { type: 'text' })}
+          {...fields.name.inputProps}
+          type="text"
           placeholder="Your name"
         />
         <div className="text-muted-foreground text-[0.8rem]">
@@ -76,43 +158,12 @@ export function AccountForm() {
 
       <div className="flex flex-col space-y-2">
         <Label htmlFor={fields.dob.id}>Date of birth</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              id={fields.dob.id}
-              variant="outline"
-              className={cn(
-                'w-60 pl-3 text-left font-normal',
-                !fields.dob.value && 'text-muted-foreground',
-              )}
-            >
-              {fields.dob.value ? (
-                format(fields.dob.value, 'MMM d, yyyy')
-              ) : (
-                <span>Pick a date</span>
-              )}
-              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={
-                fields.dob.value ? new Date(fields.dob.value) : undefined
-              }
-              onSelect={(date) => {
-                form.update({
-                  name: fields.dob.name,
-                  value: date ? format(date, 'yyyy-MM-dd') : '',
-                })
-              }}
-              disabled={(date: Date) =>
-                date > new Date() || date < new Date('1900-01-01')
-              }
-            />
-          </PopoverContent>
-        </Popover>
-        <input {...getInputProps(fields.dob, { type: 'hidden' })} />
+        <DatePicker
+          {...fields.dob.datePickerProps}
+          calendarDisabled={(date: Date) =>
+            date > new Date() || date < new Date('1900-01-01')
+          }
+        />
         <div className="text-muted-foreground text-[0.8rem]">
           Your date of birth is used to calculate your age.
         </div>
@@ -126,64 +177,7 @@ export function AccountForm() {
 
       <div className="flex flex-col space-y-2">
         <Label htmlFor={fields.language.id}>Language</Label>
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              id={fields.language.id}
-              variant="outline"
-              role="combobox"
-              className={cn(
-                'w-50 justify-between',
-                !fields.language.value && 'text-muted-foreground',
-              )}
-            >
-              {fields.language.value
-                ? languages.find(
-                    (language) => language.value === fields.language.value,
-                  )?.label
-                : 'Select language'}
-              <CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-50 p-0">
-            <Command>
-              <CommandInput placeholder="Search language..." />
-              <CommandEmpty>No language found.</CommandEmpty>
-              <CommandGroup>
-                <CommandList>
-                  {languages.map((language) => (
-                    <CommandItem
-                      value={language.label}
-                      key={language.value}
-                      onSelect={(value) => {
-                        const selectedLanguage = languages.find(
-                          (lang) => lang.label === value,
-                        )
-                        if (!selectedLanguage) return
-                        form.update({
-                          name: fields.language.name,
-                          value: selectedLanguage.value,
-                        })
-                      }}
-                    >
-                      <CheckIcon
-                        className={cn(
-                          'h-4 w-4',
-                          language.value === fields.language.value
-                            ? 'opacity-100'
-                            : 'opacity-0',
-                        )}
-                      />
-                      {language.label}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
-        <input {...getInputProps(fields.language, { type: 'hidden' })} />
+        <LanguageCombobox {...fields.language.comboBoxProps} />
         <div className="text-muted-foreground text-[0.8rem]">
           This is the language that will be used in the dashboard.
         </div>

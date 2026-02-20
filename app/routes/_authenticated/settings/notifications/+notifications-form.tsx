@@ -1,20 +1,19 @@
-import { getFormProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
 import { Form, href, Link, useActionData, useNavigation } from 'react-router'
-import type { z } from 'zod'
+import {
+  Checkbox as ConformCheckbox,
+  RadioGroup as ConformRadioGroup,
+  Switch as ConformSwitch,
+} from '~/components/conform'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
-import { Checkbox } from '~/components/ui/checkbox'
 import { Label } from '~/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
-import { Switch } from '~/components/ui/switch'
+import { RadioGroupItem } from '~/components/ui/radio-group'
+import { useForm } from '~/lib/forms'
 import { notificationsFormSchema } from './+schema'
 import type { action } from './index'
 
-type NotificationsFormValues = z.infer<typeof notificationsFormSchema>
-
 // This can come from your database or API.
-const defaultValue: Partial<NotificationsFormValues> = {
+const defaultValue = {
   communication_emails: false,
   marketing_emails: false,
   social_emails: true,
@@ -23,34 +22,18 @@ const defaultValue: Partial<NotificationsFormValues> = {
 
 export function NotificationsForm() {
   const actionData = useActionData<typeof action>()
-  const [form, fields] = useForm<NotificationsFormValues>({
-    lastResult: actionData?.lastResult,
+  const { form, fields } = useForm(notificationsFormSchema, {
+    lastResult: actionData?.result,
     defaultValue,
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: notificationsFormSchema }),
-    shouldRevalidate: 'onBlur',
   })
   const navigation = useNavigation()
 
   return (
-    <Form method="POST" {...getFormProps(form)} className="space-y-8">
+    <Form method="POST" {...form.props} className="space-y-8">
       <div className="relative space-y-3">
         <Label htmlFor={fields.type.id}>Notify me about...</Label>
-        <RadioGroup
-          key={fields.type.key}
-          name={fields.type.name}
-          id={fields.type.id}
-          defaultValue={fields.type.value}
-          onValueChange={(value) => {
-            form.update({
-              name: fields.type.name,
-              value,
-            })
-          }}
-          aria-invalid={!fields.type.valid || undefined}
-          aria-describedby={
-            !fields.type.valid ? fields.type.errorId : undefined
-          }
+        <ConformRadioGroup
+          {...fields.type.radioGroupProps}
           className="flex flex-col space-y-1"
         >
           <div className="flex items-center space-y-0 space-x-3">
@@ -79,7 +62,7 @@ export function NotificationsForm() {
               Nothing
             </Label>
           </div>
-        </RadioGroup>
+        </ConformRadioGroup>
         <div
           id={fields.type.errorId}
           className="text-destructive text-[0.8rem] font-medium empty:hidden"
@@ -103,11 +86,7 @@ export function NotificationsForm() {
                 Receive emails about your account activity.
               </div>
             </div>
-            <Switch
-              id={fields.communication_emails.id}
-              name={fields.communication_emails.name}
-              defaultChecked={fields.communication_emails.value === 'on'}
-            />
+            <ConformSwitch {...fields.communication_emails.switchProps} />
           </div>
 
           <div className="flex flex-row items-center justify-between space-y-2 rounded-lg border p-4">
@@ -119,11 +98,7 @@ export function NotificationsForm() {
                 Receive emails about new products, features, and more.
               </div>
             </div>
-            <Switch
-              id={fields.marketing_emails.id}
-              name={fields.marketing_emails.name}
-              defaultChecked={fields.marketing_emails.value === 'on'}
-            />
+            <ConformSwitch {...fields.marketing_emails.switchProps} />
           </div>
 
           <div className="flex flex-row items-center justify-between space-y-2 rounded-lg border p-4">
@@ -135,11 +110,7 @@ export function NotificationsForm() {
                 Receive emails for friend requests, follows, and more.
               </div>
             </div>
-            <Switch
-              id={fields.social_emails.id}
-              name={fields.social_emails.name}
-              defaultChecked={fields.social_emails.value === 'on'}
-            />
+            <ConformSwitch {...fields.social_emails.switchProps} />
           </div>
 
           <div className="flex flex-row items-center justify-between space-y-2 rounded-lg border p-4">
@@ -151,27 +122,17 @@ export function NotificationsForm() {
                 Receive emails about your account activity and security.
               </div>
             </div>
-            <Switch
-              id={fields.security_emails.id}
-              defaultChecked={fields.security_emails.value === 'on'}
+            <ConformSwitch
+              {...fields.security_emails.switchProps}
               disabled
               aria-readonly
-            />
-            <input
-              type="hidden"
-              name={fields.security_emails.name}
-              value="on"
             />
           </div>
         </div>
       </div>
 
       <div className="relative flex flex-row items-start space-y-0 space-x-3">
-        <Checkbox
-          id={fields.mobile.id}
-          name={fields.mobile.name}
-          defaultChecked={fields.mobile.value === 'on'}
-        />
+        <ConformCheckbox {...fields.mobile.checkboxProps} />
 
         <div className="space-y-1 leading-none">
           <Label htmlFor={fields.mobile.id}>

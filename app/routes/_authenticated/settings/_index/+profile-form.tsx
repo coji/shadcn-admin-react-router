@@ -1,32 +1,18 @@
-import {
-  getFormProps,
-  getInputProps,
-  getTextareaProps,
-  useForm,
-} from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
 import { XIcon } from 'lucide-react'
 import { Form, href, Link, useActionData, useNavigation } from 'react-router'
-import type { z } from 'zod'
+import { Select as ConformSelect } from '~/components/conform'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
+import { SelectItem } from '~/components/ui/select'
 import { Textarea } from '~/components/ui/textarea'
+import { useForm } from '~/lib/forms'
 import { profileFormSchema } from './+schema'
 import type { action } from './index'
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>
-
 // This can come from your database or API.
-const defaultValue: Partial<ProfileFormValues> = {
+const defaultValue = {
   username: 'shadcn',
   email: 'm@example.com',
   bio: 'I own a computer.',
@@ -35,23 +21,20 @@ const defaultValue: Partial<ProfileFormValues> = {
 
 export default function ProfileForm() {
   const actionData = useActionData<typeof action>()
-  const [form, fields] = useForm({
-    lastResult: actionData?.lastResult,
+  const { form, fields, intent } = useForm(profileFormSchema, {
+    lastResult: actionData?.result,
     defaultValue,
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: profileFormSchema }),
-    shouldRevalidate: 'onBlur',
   })
   const urls = fields.urls.getFieldList()
   const navigation = useNavigation()
 
   return (
-    <Form method="POST" {...getFormProps(form)} className="space-y-8">
+    <Form method="POST" {...form.props} className="space-y-8">
       <div className="space-y-2">
         <Label htmlFor={fields.username.id}>Username</Label>
         <Input
-          {...getInputProps(fields.username, { type: 'text' })}
-          key={fields.username.key}
+          {...fields.username.inputProps}
+          type="text"
           placeholder="shadcn"
         />
         <div className="text-muted-foreground text-[0.8rem]">
@@ -68,27 +51,14 @@ export default function ProfileForm() {
 
       <div className="space-y-2">
         <Label htmlFor={fields.email.id}>Email</Label>
-        <Select
-          key={fields.email.key}
-          defaultValue={fields.email.initialValue}
-          name={fields.email.name}
-          onValueChange={(value) => {
-            form.update({
-              name: fields.email.name,
-              value,
-            })
-          }}
+        <ConformSelect
+          {...fields.email.selectProps}
+          placeholder="Select a verified email to display"
         >
-          <SelectTrigger id={fields.email.id}>
-            <SelectValue placeholder="Select a verified email to display" />
-          </SelectTrigger>
-
-          <SelectContent>
-            <SelectItem value="m@example.com">m@example.com</SelectItem>
-            <SelectItem value="m@google.com">m@google.com</SelectItem>
-            <SelectItem value="m@support.com">m@support.com</SelectItem>
-          </SelectContent>
-        </Select>
+          <SelectItem value="m@example.com">m@example.com</SelectItem>
+          <SelectItem value="m@google.com">m@google.com</SelectItem>
+          <SelectItem value="m@support.com">m@support.com</SelectItem>
+        </ConformSelect>
         <div className="text-muted-foreground text-[0.8rem]">
           You can manage verified email addresses in your{' '}
           <Link to={href('/')}>email settings</Link>.
@@ -104,8 +74,7 @@ export default function ProfileForm() {
       <div className="space-y-2">
         <Label htmlFor={fields.bio.id}>Bio</Label>
         <Textarea
-          {...getTextareaProps(fields.bio)}
-          key={fields.bio.key}
+          {...fields.bio.textareaProps}
           placeholder="Tell us a little bit about yourself"
           className="resize-none"
         />
@@ -131,20 +100,22 @@ export default function ProfileForm() {
           <div key={url.id} className="space-y-2">
             <div className="flex items-center gap-2">
               <Input
-                {...getInputProps(url, { type: 'url' })}
-                key={url.key}
+                {...url.inputProps}
+                type="url"
                 placeholder="https://example.com"
                 className="flex-1"
               />
               <Button
-                type="submit"
+                type="button"
                 size="sm"
                 variant="ghost"
                 className="text-muted-foreground hover:text-muted-foreground"
-                {...form.remove.getButtonProps({
-                  name: fields.urls.name,
-                  index,
-                })}
+                onClick={() =>
+                  intent.remove({
+                    name: fields.urls.name,
+                    index,
+                  })
+                }
               >
                 <XIcon />
               </Button>
@@ -159,12 +130,15 @@ export default function ProfileForm() {
         ))}
 
         <Button
+          type="button"
           variant="outline"
           size="sm"
           className="mt-2"
-          {...form.insert.getButtonProps({
-            name: fields.urls.name,
-          })}
+          onClick={() =>
+            intent.insert({
+              name: fields.urls.name,
+            })
+          }
         >
           Add URL
         </Button>

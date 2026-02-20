@@ -1,12 +1,6 @@
-import {
-  getFormProps,
-  getInputProps,
-  getTextareaProps,
-  useForm,
-} from '@conform-to/react'
-import { getZodConstraint, parseWithZod } from '@conform-to/zod/v4'
 import { IconMailPlus, IconSend } from '@tabler/icons-react'
 import { Form, useNavigation } from 'react-router'
+import { Select as ConformSelect } from '~/components/conform'
 import { Button } from '~/components/ui/button'
 import {
   Dialog,
@@ -19,14 +13,9 @@ import {
 } from '~/components/ui/dialog'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
+import { SelectItem } from '~/components/ui/select'
 import { Textarea } from '~/components/ui/textarea'
+import { useForm } from '~/lib/forms'
 import { formSchema } from '../+schema'
 
 interface Props {
@@ -35,12 +24,8 @@ interface Props {
 }
 
 export function UsersInviteDialog({ open, onOpenChange }: Props) {
-  const [form, fields] = useForm({
+  const { form, fields, intent } = useForm(formSchema, {
     defaultValue: { email: '', role: '', desc: '' },
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: formSchema }),
-    constraint: getZodConstraint(formSchema),
-    shouldRevalidate: 'onBlur',
   })
   const navigation = useNavigation()
 
@@ -48,7 +33,7 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
     <Dialog
       open={open}
       onOpenChange={(state) => {
-        form.reset()
+        intent.reset()
         onOpenChange(state)
       }}
     >
@@ -62,11 +47,12 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
             invitation. Assign a role to define their access level.
           </DialogDescription>
         </DialogHeader>
-        <Form method="POST" {...getFormProps(form)} className="space-y-4">
+        <Form method="POST" {...form.props} className="space-y-4">
           <div className="space-y-1">
             <Label htmlFor={fields.email.id}>Email</Label>
             <Input
-              {...getInputProps(fields.email, { type: 'email' })}
+              {...fields.email.inputProps}
+              type="email"
               placeholder="eg: john.doe@gmail.com"
             />
             <div
@@ -79,26 +65,15 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
 
           <div className="space-y-1">
             <Label htmlFor={fields.role.id}>Role</Label>
-            <Select
-              name={fields.role.name}
-              defaultValue={fields.role.initialValue}
-              onValueChange={(value) => {
-                form.update({
-                  name: fields.role.name,
-                  value,
-                })
-              }}
+            <ConformSelect
+              {...fields.role.selectProps}
+              placeholder="Select a role"
             >
-              <SelectTrigger id={fields.role.id}>
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="superadmin">Superadmin</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="manager">Manager</SelectItem>
-                <SelectItem value="cashier">Cashier</SelectItem>
-              </SelectContent>
-            </Select>
+              <SelectItem value="superadmin">Superadmin</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="manager">Manager</SelectItem>
+              <SelectItem value="cashier">Cashier</SelectItem>
+            </ConformSelect>
             <div
               id={fields.role.errorId}
               className="text-destructive text-[0.8rem] font-medium empty:hidden"
@@ -110,7 +85,7 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
           <div className="space-y-1">
             <Label htmlFor={fields.desc.id}>Description (optional)</Label>
             <Textarea
-              {...getTextareaProps(fields.desc)}
+              {...fields.desc.textareaProps}
               className="resize-none"
               placeholder="Add a personal note to your invitation (optional)"
             />

@@ -1,5 +1,4 @@
-import { getFormProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
+import { useFormData } from '@conform-to/react/future'
 import type { HTMLAttributes } from 'react'
 import { Form, useActionData, useNavigation } from 'react-router'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
@@ -10,6 +9,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from '~/components/ui/input-otp'
+import { useForm } from '~/lib/forms'
 import { cn } from '~/lib/utils'
 import { formSchema } from '../+schema'
 import type { action } from '../index'
@@ -18,30 +18,30 @@ type OtpFormProps = HTMLAttributes<HTMLFormElement>
 
 export function OtpForm({ className, ...props }: OtpFormProps) {
   const actionData = useActionData<typeof action>()
-  const [form, { otp }] = useForm({
-    lastResult: actionData?.lastResult,
+  const { form, fields, intent } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: { otp: '' },
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: formSchema }),
-    shouldRevalidate: 'onBlur',
   })
   const navigation = useNavigation()
+  const otpValue = useFormData(form.id, (formData) =>
+    formData.get(fields.otp.name),
+  )
 
   return (
     <Form
       method="POST"
-      {...getFormProps(form)}
+      {...form.props}
       className={cn('grid gap-2', className)}
       {...props}
     >
       <div className="space-y-1">
         <InputOTP
-          name={otp.name}
+          name={fields.otp.name}
           maxLength={6}
           containerClassName="justify-center"
           onComplete={(value) => {
-            form.update({
-              name: otp.name,
+            intent.update({
+              name: fields.otp.name,
               value,
             })
           }}
@@ -71,8 +71,8 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
       <Button
         className="mt-2"
         disabled={
-          otp.value === undefined ||
-          otp.value.length < 6 ||
+          !otpValue ||
+          String(otpValue).length < 6 ||
           navigation.state === 'submitting'
         }
       >

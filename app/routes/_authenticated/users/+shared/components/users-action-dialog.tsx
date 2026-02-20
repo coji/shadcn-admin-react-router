@@ -1,7 +1,7 @@
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod/v4'
+import { coerceFormValue } from '@conform-to/zod/v4/future'
 import { Form, useNavigation } from 'react-router'
 import { z } from 'zod'
+import { Select as ConformSelect } from '~/components/conform'
 import { PasswordInput } from '~/components/password-input'
 import { Button } from '~/components/ui/button'
 import {
@@ -15,13 +15,8 @@ import {
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { ScrollArea } from '~/components/ui/scroll-area'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
+import { SelectItem } from '~/components/ui/select'
+import { useForm } from '~/lib/forms'
 import { userTypes } from '../data/data'
 import type { User } from '../data/schema'
 
@@ -41,54 +36,95 @@ const baseSchema = z.object({
   }),
 })
 
-export const createSchema = baseSchema.merge(
-  z.object({
-    intent: z.literal('create'),
-    password: z
-      .string({
-        error: (issue) =>
-          issue.input === undefined
-            ? 'Password is required.'
-            : 'Invalid password',
-      })
-      .trim()
-      .min(8, { error: 'Password must be at least 8 characters long.' })
-      .regex(/[a-z]/, {
-        error: 'Password must contain at least one lowercase letter.',
-      })
-      .regex(/\d/, { error: 'Password must contain at least one number.' }),
-    confirmPassword: z
-      .string({
-        error: (issue) =>
-          issue.input === undefined
-            ? 'Confirm Password is required.'
-            : 'Please confirm your password.',
-      })
-      .trim()
-      .min(8, { error: 'Password must be at least 8 characters long.' })
-      .regex(/[a-z]/, {
-        error: 'Password must contain at least one lowercase letter.',
-      })
-      .regex(/\d/, { error: 'Password must contain at least one number.' }),
-  }),
+export const createSchema = coerceFormValue(
+  baseSchema.merge(
+    z.object({
+      intent: z.literal('create'),
+      password: z
+        .string({
+          error: (issue) =>
+            issue.input === undefined
+              ? 'Password is required.'
+              : 'Invalid password',
+        })
+        .trim()
+        .min(8, { error: 'Password must be at least 8 characters long.' })
+        .regex(/[a-z]/, {
+          error: 'Password must contain at least one lowercase letter.',
+        })
+        .regex(/\d/, { error: 'Password must contain at least one number.' }),
+      confirmPassword: z
+        .string({
+          error: (issue) =>
+            issue.input === undefined
+              ? 'Confirm Password is required.'
+              : 'Please confirm your password.',
+        })
+        .trim()
+        .min(8, { error: 'Password must be at least 8 characters long.' })
+        .regex(/[a-z]/, {
+          error: 'Password must contain at least one lowercase letter.',
+        })
+        .regex(/\d/, { error: 'Password must contain at least one number.' }),
+    }),
+  ),
 )
 
-export const editSchema = baseSchema.merge(
-  z.object({ intent: z.literal('edit') }),
+export const editSchema = coerceFormValue(
+  baseSchema.merge(z.object({ intent: z.literal('edit') })),
 )
 
-const formSchema = z
-  .discriminatedUnion('intent', [createSchema, editSchema])
-  .superRefine((arg, ctx) => {
-    if (arg.intent !== 'create') return
-    if (arg.password !== arg.confirmPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: "Passwords don't match.",
-        path: ['confirmPassword'],
-      })
-    }
-  })
+const formSchema = coerceFormValue(
+  z
+    .discriminatedUnion('intent', [
+      baseSchema.merge(
+        z.object({
+          intent: z.literal('create'),
+          password: z
+            .string({
+              error: (issue) =>
+                issue.input === undefined
+                  ? 'Password is required.'
+                  : 'Invalid password',
+            })
+            .trim()
+            .min(8, { error: 'Password must be at least 8 characters long.' })
+            .regex(/[a-z]/, {
+              error: 'Password must contain at least one lowercase letter.',
+            })
+            .regex(/\d/, {
+              error: 'Password must contain at least one number.',
+            }),
+          confirmPassword: z
+            .string({
+              error: (issue) =>
+                issue.input === undefined
+                  ? 'Confirm Password is required.'
+                  : 'Please confirm your password.',
+            })
+            .trim()
+            .min(8, { error: 'Password must be at least 8 characters long.' })
+            .regex(/[a-z]/, {
+              error: 'Password must contain at least one lowercase letter.',
+            })
+            .regex(/\d/, {
+              error: 'Password must contain at least one number.',
+            }),
+        }),
+      ),
+      baseSchema.merge(z.object({ intent: z.literal('edit') })),
+    ])
+    .superRefine((arg, ctx) => {
+      if (arg.intent !== 'create') return
+      if (arg.password !== arg.confirmPassword) {
+        ctx.addIssue({
+          code: 'custom',
+          message: "Passwords don't match.",
+          path: ['confirmPassword'],
+        })
+      }
+    }),
+)
 
 interface Props {
   user?: User
@@ -98,7 +134,7 @@ interface Props {
 
 export function UsersActionDialog({ user, open, onOpenChange }: Props) {
   const isEdit = !!user
-  const [form, fields] = useForm({
+  const { form, fields } = useForm(formSchema, {
     defaultValue: isEdit
       ? {
           ...user,
@@ -115,11 +151,8 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
           password: '',
           confirmPassword: '',
         },
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: formSchema }),
-    shouldRevalidate: 'onBlur',
   })
-  const isPasswordTouched = fields.password.dirty
+  const isPasswordTouched = fields.password.touched
   const navigation = useNavigation()
 
   return (
@@ -138,11 +171,7 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="-mr-4 w-full py-1 pr-4">
-          <Form
-            method="POST"
-            {...getFormProps(form)}
-            className="space-y-4 p-0.5"
-          >
+          <Form method="POST" {...form.props} className="space-y-4 p-0.5">
             <div className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
               <Label
                 htmlFor={fields.firstName.id}
@@ -151,7 +180,8 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
                 First Name
               </Label>
               <Input
-                {...getInputProps(fields.firstName, { type: 'text' })}
+                {...fields.firstName.inputProps}
+                type="text"
                 placeholder="John"
                 className="col-span-4"
               />
@@ -171,7 +201,8 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
                 Last Name
               </Label>
               <Input
-                {...getInputProps(fields.lastName, { type: 'text' })}
+                {...fields.lastName.inputProps}
+                type="text"
                 placeholder="Doe"
                 className="col-span-4"
               />
@@ -191,7 +222,8 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
                 Username
               </Label>
               <Input
-                {...getInputProps(fields.username, { type: 'text' })}
+                {...fields.username.inputProps}
+                type="text"
                 placeholder="john_doe"
                 className="col-span-4"
               />
@@ -211,7 +243,8 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
                 Email
               </Label>
               <Input
-                {...getInputProps(fields.email, { type: 'email' })}
+                {...fields.email.inputProps}
+                type="email"
                 placeholder="john.doe@gmail.com"
                 className="col-span-4"
               />
@@ -231,7 +264,8 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
                 Phone Number
               </Label>
               <Input
-                {...getInputProps(fields.phoneNumber, { type: 'tel' })}
+                {...fields.phoneNumber.inputProps}
+                type="tel"
                 placeholder="+123456789"
                 className="col-span-4"
               />
@@ -247,27 +281,16 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
               <Label htmlFor={fields.role.id} className="col-span-2 text-right">
                 Role
               </Label>
-              <Select
-                name={fields.role.name}
-                defaultValue={fields.role.initialValue}
-                onValueChange={(value) => {
-                  form.update({
-                    name: fields.role.name,
-                    value,
-                  })
-                }}
+              <ConformSelect
+                {...fields.role.selectProps}
+                placeholder="Select a role"
               >
-                <SelectTrigger id={fields.role.id} className="col-span-4">
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  {userTypes.map(({ label, value }) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                {userTypes.map(({ label, value }) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </ConformSelect>
               <div
                 id={fields.role.errorId}
                 className="text-destructive col-span-4 col-start-3 text-[0.8rem] font-medium empty:hidden"
@@ -286,7 +309,7 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
                     Password
                   </Label>
                   <PasswordInput
-                    {...getInputProps(fields.password, { type: 'password' })}
+                    {...fields.password.inputProps}
                     placeholder="e.g., S3cur3P@ssw0rd"
                     className="col-span-4"
                   />
@@ -307,9 +330,7 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
                   </Label>
                   <PasswordInput
                     disabled={!isPasswordTouched}
-                    {...getInputProps(fields.confirmPassword, {
-                      type: 'password',
-                    })}
+                    {...fields.confirmPassword.inputProps}
                     placeholder="e.g., S3cur3P@ssw0rd"
                     className="col-span-4"
                   />
