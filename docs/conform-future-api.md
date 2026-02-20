@@ -60,25 +60,26 @@ const forms = configureForms({
   },
 })
 
-export const { useForm, useFormMetadata, useField, useIntent, FormProvider } = forms
+export const { useForm, useFormMetadata, useField, useIntent, FormProvider } =
+  forms
 ```
 
 ### Metadata Properties Used in Props Spreaders
 
 The `metadata` object provided to `extendFieldMetadata` contains properties derived from the Zod schema via `getConstraints`, plus Conform's runtime state:
 
-| Property | Source | Used in |
-| --- | --- | --- |
-| `id`, `name`, `defaultValue` | Conform core | All props |
-| `ariaDescribedBy` | Conform (links to `errorId`) | All props |
-| `ariaInvalid` | Conform (touched + has errors) | All props |
-| `required` | `getConstraints` from schema | All props |
-| `minLength`, `maxLength` | `getConstraints` from `z.string().min/max` | `inputProps`, `textareaProps`, `inputOTPProps` |
-| `min`, `max`, `step` | `getConstraints` from `z.number().min/max` | `inputProps` |
-| `multiple` | `getConstraints` from `z.array()` | `inputProps` |
-| `pattern` | `getConstraints` from `z.regex()` | `inputProps` |
-| `accept` | Manual constraint | `inputProps` |
-| `defaultChecked` | Conform core | `checkboxProps`, `switchProps` |
+| Property                     | Source                                     | Used in                                        |
+| ---------------------------- | ------------------------------------------ | ---------------------------------------------- |
+| `id`, `name`, `defaultValue` | Conform core                               | All props                                      |
+| `ariaDescribedBy`            | Conform (links to `errorId`)               | All props                                      |
+| `ariaInvalid`                | Conform (touched + has errors)             | All props                                      |
+| `required`                   | `getConstraints` from schema               | All props                                      |
+| `minLength`, `maxLength`     | `getConstraints` from `z.string().min/max` | `inputProps`, `textareaProps`, `inputOTPProps` |
+| `min`, `max`, `step`         | `getConstraints` from `z.number().min/max` | `inputProps`                                   |
+| `multiple`                   | `getConstraints` from `z.array()`          | `inputProps`                                   |
+| `pattern`                    | `getConstraints` from `z.regex()`          | `inputProps`                                   |
+| `accept`                     | Manual constraint                          | `inputProps`                                   |
+| `defaultChecked`             | Conform core                               | `checkboxProps`, `switchProps`                 |
 
 **Note on `ariaInvalid`**: Use `metadata.ariaInvalid` rather than `!metadata.valid`. The `ariaInvalid` property is `true` only when the field has been touched and has errors, while `valid` is `false` even before the user interacts with the field.
 
@@ -102,13 +103,16 @@ import { z } from 'zod'
 
 export const formSchema = coerceFormValue(
   z.object({
-    email: z.email({ error: (issue) => !issue.input ? 'Required' : 'Invalid' }),
+    email: z.email({
+      error: (issue) => (!issue.input ? 'Required' : 'Invalid'),
+    }),
     password: z.string({ error: 'Required' }).min(7, { message: 'Too short' }),
   }),
 )
 ```
 
 Cases where `coerceFormValue` is especially useful:
+
 - `z.number()` - string `"25"` -> number `25`
 - `z.boolean()` - `"on"` -> `true`
 - `z.date()` - ISO string -> `Date`
@@ -202,13 +206,13 @@ return dataWithSuccess(null, { message: 'Updated successfully' })
 
 ### Legacy -> Future Migration Table (Server)
 
-| Legacy | Future |
-| --- | --- |
-| `parseWithZod(formData, { schema })` | `parseSubmission(formData)` + `schema.safeParse(submission.payload)` |
-| `submission.reply()` | `report(submission, { error: { issues } })` |
-| `submission.reply({ formErrors: [...] })` | `report(submission, { error: { formErrors: [...] } })` |
-| `submission.reply({ resetForm: true })` | `report(submission, { reset: true })` |
-| `{ lastResult: submission.reply() }` | `{ result: report(submission, ...) }` |
+| Legacy                                    | Future                                                               |
+| ----------------------------------------- | -------------------------------------------------------------------- |
+| `parseWithZod(formData, { schema })`      | `parseSubmission(formData)` + `schema.safeParse(submission.payload)` |
+| `submission.reply()`                      | `report(submission, { error: { issues } })`                          |
+| `submission.reply({ formErrors: [...] })` | `report(submission, { error: { formErrors: [...] } })`               |
+| `submission.reply({ resetForm: true })`   | `report(submission, { reset: true })`                                |
+| `{ lastResult: submission.reply() }`      | `{ result: report(submission, ...) }`                                |
 
 ## Form Components
 
@@ -241,20 +245,20 @@ export function MyForm() {
 
 ### Legacy -> Future Migration Table (Client)
 
-| Legacy | Future |
-| --- | --- |
-| `const [form, fields] = useForm({...})` | `const { form, fields, intent } = useForm(schema, {...})` |
-| `<Form {...getFormProps(form)}>` | `<Form {...form.props}>` |
-| `getInputProps(fields.x, { type })` | `{...fields.x.inputProps}` + `type="email"` etc. |
-| `getTextareaProps(fields.x)` | `{...fields.x.textareaProps}` |
-| `getSelectProps(fields.x)` | `{...fields.x.selectProps}` (native select only) |
-| `onValidate: ({ formData }) => parseWithZod(...)` | Not needed (automatic with schema-first) |
-| `lastResult: actionData?.lastResult` | `lastResult: actionData?.result` |
-| `fields.x.dirty` | `fields.x.touched` |
-| `form.insert.getButtonProps(...)` | `intent.insert({ name, ... })` |
-| `form.remove.getButtonProps(...)` | `intent.remove({ name, index })` |
-| `form.update.getButtonProps(...)` | `intent.update({ name, value })` |
-| `form.reset()` / `form.reset.getButtonProps()` | `intent.reset()` |
+| Legacy                                            | Future                                                    |
+| ------------------------------------------------- | --------------------------------------------------------- |
+| `const [form, fields] = useForm({...})`           | `const { form, fields, intent } = useForm(schema, {...})` |
+| `<Form {...getFormProps(form)}>`                  | `<Form {...form.props}>`                                  |
+| `getInputProps(fields.x, { type })`               | `{...fields.x.inputProps}` + `type="email"` etc.          |
+| `getTextareaProps(fields.x)`                      | `{...fields.x.textareaProps}`                             |
+| `getSelectProps(fields.x)`                        | `{...fields.x.selectProps}` (native select only)          |
+| `onValidate: ({ formData }) => parseWithZod(...)` | Not needed (automatic with schema-first)                  |
+| `lastResult: actionData?.lastResult`              | `lastResult: actionData?.result`                          |
+| `fields.x.dirty`                                  | `fields.x.touched`                                        |
+| `form.insert.getButtonProps(...)`                 | `intent.insert({ name, ... })`                            |
+| `form.remove.getButtonProps(...)`                 | `intent.remove({ name, index })`                          |
+| `form.update.getButtonProps(...)`                 | `intent.update({ name, value })`                          |
+| `form.reset()` / `form.reset.getButtonProps()`    | `intent.reset()`                                          |
 
 ## shadcn/ui Wrapper Components (`app/components/conform/`)
 
@@ -263,15 +267,15 @@ so we provide wrapper components that connect them via the `useControl` hook wit
 
 ### Available Components
 
-| Component | Import | Props Spreader |
-| --- | --- | --- |
-| `Select` | `~/components/conform` | `fields.x.selectProps` |
-| `Checkbox` | `~/components/conform` | `fields.x.checkboxProps` |
-| `Switch` | `~/components/conform` | `fields.x.switchProps` |
+| Component    | Import                 | Props Spreader             |
+| ------------ | ---------------------- | -------------------------- |
+| `Select`     | `~/components/conform` | `fields.x.selectProps`     |
+| `Checkbox`   | `~/components/conform` | `fields.x.checkboxProps`   |
+| `Switch`     | `~/components/conform` | `fields.x.switchProps`     |
 | `RadioGroup` | `~/components/conform` | `fields.x.radioGroupProps` |
 | `DatePicker` | `~/components/conform` | `fields.x.datePickerProps` |
-| `Field` | `~/components/conform` | -- (layout only) |
-| `FieldError` | `~/components/conform` | -- (error display) |
+| `Field`      | `~/components/conform` | -- (layout only)           |
+| `FieldError` | `~/components/conform` | -- (error display)         |
 
 ### Design Principle: Children Pattern
 
@@ -282,7 +286,7 @@ This allows flexible rendering such as SelectItems with icons or custom RadioGro
 import { Select } from '~/components/conform'
 import { SelectItem } from '~/components/ui/select'
 
-<Select {...fields.status.selectProps} placeholder="Select status">
+;<Select {...fields.status.selectProps} placeholder="Select status">
   <SelectItem value="todo">Todo</SelectItem>
   <SelectItem value="in-progress">In Progress</SelectItem>
   <SelectItem value="done">Done</SelectItem>
@@ -293,7 +297,7 @@ import { SelectItem } from '~/components/ui/select'
 import { RadioGroup } from '~/components/conform'
 import { RadioGroupItem } from '~/components/ui/radio-group'
 
-<RadioGroup {...fields.priority.radioGroupProps}>
+;<RadioGroup {...fields.priority.radioGroupProps}>
   <div className="flex items-center space-x-2">
     <RadioGroupItem value="low" id="low" />
     <Label htmlFor="low">Low</Label>
@@ -318,8 +322,8 @@ export type SelectProps = Omit<
   name: string
   defaultValue?: string
   placeholder?: string
-  disabled?: boolean   // -> forwarded to Select Root
-  required?: boolean   // -> forwarded to Select Root
+  disabled?: boolean // -> forwarded to Select Root
+  required?: boolean // -> forwarded to Select Root
   children: React.ReactNode
 }
 ```
@@ -340,7 +344,9 @@ function Select({ name, defaultValue, placeholder, children, ...props }) {
   const selectRef = useRef(null)
   const control = useControl({
     defaultValue,
-    onFocus() { selectRef.current?.focus() },
+    onFocus() {
+      selectRef.current?.focus()
+    },
   })
 
   return (
@@ -349,7 +355,9 @@ function Select({ name, defaultValue, placeholder, children, ...props }) {
       <ShadcnSelect
         value={control.value}
         onValueChange={(v) => control.change(v)}
-        onOpenChange={(open) => { if (!open) control.blur() }}
+        onOpenChange={(open) => {
+          if (!open) control.blur()
+        }}
       >
         <SelectTrigger {...props} ref={selectRef}>
           <SelectValue placeholder={placeholder} />
@@ -363,13 +371,13 @@ function Select({ name, defaultValue, placeholder, children, ...props }) {
 
 ### `useControl` Usage by Component
 
-| Component | Hidden input | Reading control | Writing control |
-| --- | --- | --- | --- |
-| Select | `<input hidden />` | `control.value` | `control.change(value)` |
-| Checkbox | `<input type="checkbox" hidden />` | `control.checked` | `control.change(checked)` |
-| Switch | `<input type="checkbox" hidden />` | `control.checked` | `control.change(checked)` |
-| RadioGroup | `<input hidden />` | `control.value` | `control.change(value)` |
-| DatePicker | `<input hidden />` | `control.value` | `control.change(date.toISOString())` |
+| Component  | Hidden input                       | Reading control   | Writing control                      |
+| ---------- | ---------------------------------- | ----------------- | ------------------------------------ |
+| Select     | `<input hidden />`                 | `control.value`   | `control.change(value)`              |
+| Checkbox   | `<input type="checkbox" hidden />` | `control.checked` | `control.change(checked)`            |
+| Switch     | `<input type="checkbox" hidden />` | `control.checked` | `control.change(checked)`            |
+| RadioGroup | `<input hidden />`                 | `control.value`   | `control.change(value)`              |
+| DatePicker | `<input hidden />`                 | `control.value`   | `control.change(date.toISOString())` |
 
 ### Checkbox Array Pattern
 
@@ -378,19 +386,21 @@ To submit array values with multiple checkboxes, set the same `name` and differe
 ```tsx
 const itemList = fields.items.getFieldList()
 
-{displayItems.map((item) => {
-  const isChecked = itemList.some((i) => i.defaultValue === item.id)
-  return (
-    <div key={item.id} className="flex items-center space-x-2">
-      <Checkbox
-        name={fields.items.name}
-        value={item.id}
-        defaultChecked={isChecked}
-      />
-      <Label>{item.label}</Label>
-    </div>
-  )
-})}
+{
+  displayItems.map((item) => {
+    const isChecked = itemList.some((i) => i.defaultValue === item.id)
+    return (
+      <div key={item.id} className="flex items-center space-x-2">
+        <Checkbox
+          name={fields.items.name}
+          value={item.id}
+          defaultChecked={isChecked}
+        />
+        <Label>{item.label}</Label>
+      </div>
+    )
+  })
+}
 ```
 
 ### Native `<select>`
@@ -416,20 +426,39 @@ Comboboxes vary significantly in data, search, and display logic across applicat
 so instead of a generic wrapper, use `useControl` inline within the form.
 
 ```tsx
-function LanguageCombobox({ id, name, defaultValue, 'aria-describedby': ariaDescribedBy }) {
+function LanguageCombobox({
+  id,
+  name,
+  defaultValue,
+  'aria-describedby': ariaDescribedBy,
+}) {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const control = useControl({
     defaultValue,
-    onFocus() { triggerRef.current?.focus() },
+    onFocus() {
+      triggerRef.current?.focus()
+    },
   })
 
   return (
     <>
       <input ref={control.register} name={name} hidden />
-      <Popover onOpenChange={(open) => { if (!open) control.blur() }}>
+      <Popover
+        onOpenChange={(open) => {
+          if (!open) control.blur()
+        }}
+      >
         <PopoverTrigger asChild>
-          <Button ref={triggerRef} variant="outline" role="combobox" id={id} aria-describedby={ariaDescribedBy}>
-            {control.value ? languages.find((l) => l.value === control.value)?.label : 'Select...'}
+          <Button
+            ref={triggerRef}
+            variant="outline"
+            role="combobox"
+            id={id}
+            aria-describedby={ariaDescribedBy}
+          >
+            {control.value
+              ? languages.find((l) => l.value === control.value)?.label
+              : 'Select...'}
           </Button>
         </PopoverTrigger>
         <PopoverContent>
@@ -437,8 +466,11 @@ function LanguageCombobox({ id, name, defaultValue, 'aria-describedby': ariaDesc
             <CommandInput placeholder="Search..." />
             <CommandList>
               {languages.map((lang) => (
-                <CommandItem key={lang.value} value={lang.value}
-                  onSelect={(value) => control.change(value)}>
+                <CommandItem
+                  key={lang.value}
+                  value={lang.value}
+                  onSelect={(value) => control.change(value)}
+                >
                   {lang.label}
                 </CommandItem>
               ))}
@@ -451,7 +483,7 @@ function LanguageCombobox({ id, name, defaultValue, 'aria-describedby': ariaDesc
 }
 
 // Usage in a form
-<LanguageCombobox {...fields.language.comboBoxProps} />
+;<LanguageCombobox {...fields.language.comboBoxProps} />
 ```
 
 ### DatePicker Props
@@ -467,7 +499,9 @@ The DatePicker wraps multiple components (Button, Calendar, Popover), so it uses
 ```tsx
 <DatePicker
   {...fields.dob.datePickerProps}
-  calendarDisabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+  calendarDisabled={(date) =>
+    date > new Date() || date < new Date('1900-01-01')
+  }
 />
 ```
 
@@ -478,7 +512,7 @@ Simple layout components:
 ```tsx
 import { Field, FieldError } from '~/components/conform'
 
-<Field>
+;<Field>
   <Label htmlFor={fields.email.id}>Email</Label>
   <Input {...fields.email.inputProps} type="email" />
   <FieldError id={fields.email.errorId}>{fields.email.errors}</FieldError>
@@ -510,15 +544,15 @@ const urls = fields.urls.getFieldList()
 
 ### Intent Methods
 
-| Method | Purpose |
-| --- | --- |
-| `intent.validate()` | Validate the entire form |
-| `intent.validate('fieldName')` | Validate a specific field |
-| `intent.reset()` | Reset to default values |
-| `intent.update({ name, value })` | Update a field value |
-| `intent.insert({ name })` | Add an element to an array |
-| `intent.remove({ name, index })` | Remove an element from an array |
-| `intent.reorder({ name, from, to })` | Reorder array elements |
+| Method                               | Purpose                         |
+| ------------------------------------ | ------------------------------- |
+| `intent.validate()`                  | Validate the entire form        |
+| `intent.validate('fieldName')`       | Validate a specific field       |
+| `intent.reset()`                     | Reset to default values         |
+| `intent.update({ name, value })`     | Update a field value            |
+| `intent.insert({ name })`            | Add an element to an array      |
+| `intent.remove({ name, index })`     | Remove an element from an array |
+| `intent.reorder({ name, from, to })` | Reorder array elements          |
 
 ### Resetting in Dialogs
 
@@ -555,10 +589,11 @@ const dirty = useFormData(form.id, (formData) =>
 import { memoize } from '@conform-to/react/future'
 
 const checkUsername = useMemo(
-  () => memoize(async (username: string) => {
-    const res = await fetch(`/api/check?name=${username}`)
-    return res.ok ? null : ['Already taken']
-  }),
+  () =>
+    memoize(async (username: string) => {
+      const res = await fetch(`/api/check?name=${username}`)
+      return res.ok ? null : ['Already taken']
+    }),
   [],
 )
 
@@ -577,7 +612,7 @@ const { form, fields } = useForm(schema, {
 
 ```tsx
 // Parent
-<FormProvider context={form.context}>
+;<FormProvider context={form.context}>
   <MyFieldComponent name={fields.email.name} />
 </FormProvider>
 
