@@ -8,7 +8,7 @@ export default function AuthLayout() {
 
   return (
     <div className="bg-primary-foreground grid h-svh">
-      <div className="container mx-auto flex w-full flex-col justify-center space-y-2 sm:w-[480px] lg:p-8">
+      <div className="container mx-auto flex w-full flex-col justify-center space-y-2 sm:w-120 lg:p-8">
         <div className="mb-4 flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"

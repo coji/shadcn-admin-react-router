@@ -47,6 +47,7 @@ export default function Apps() {
     )
     .filter((app) => app.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
+  const newLocal = 'h-9 w-40 lg:w-62.5'
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -72,7 +73,7 @@ export default function Apps() {
           <div className="flex flex-col gap-4 sm:my-4 sm:flex-row">
             <Input
               placeholder="Filter apps..."
-              className="h-9 w-40 lg:w-[250px]"
+              className={newLocal}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

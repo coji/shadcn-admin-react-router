@@ -218,7 +218,7 @@ export default function Chats() {
                             <div
                               key={`${msg.sender}-${msg.timestamp}-${index}`}
                               className={cn(
-                                'chat-box max-w-72 px-3 py-2 break-words shadow-lg',
+                                'chat-box max-w-72 px-3 py-2 wrap-break-word shadow-lg',
                                 msg.sender === 'You'
                                   ? 'bg-primary/85 text-primary-foreground/75 self-end rounded-[16px_16px_0_16px]'
                                   : 'bg-secondary self-start rounded-[16px_16px_16px_0]',
