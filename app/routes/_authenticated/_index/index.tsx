@@ -13,8 +13,11 @@ import {
   CardTitle,
 } from '~/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { AnalyticsTab } from './+components/analytics-tab'
+import { NotificationsTab } from './+components/notifications-tab'
 import { Overview } from './+components/overview'
 import { RecentSales } from './+components/recent-sales'
+import { ReportsTab } from './+components/reports-tab'
 
 const topNav = [
   {
@@ -66,15 +69,9 @@ export default function Dashboard() {
           <div className="w-full overflow-x-auto pb-2">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="analytics" disabled>
-                Analytics
-              </TabsTrigger>
-              <TabsTrigger value="reports" disabled>
-                Reports
-              </TabsTrigger>
-              <TabsTrigger value="notifications" disabled>
-                Notifications
-              </TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="reports">Reports</TabsTrigger>
+              <TabsTrigger value="notifications">Notifications</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="overview" className="space-y-4">
@@ -202,6 +199,15 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+          <TabsContent value="analytics" className="space-y-4">
+            <AnalyticsTab />
+          </TabsContent>
+          <TabsContent value="reports" className="space-y-4">
+            <ReportsTab />
+          </TabsContent>
+          <TabsContent value="notifications" className="space-y-4">
+            <NotificationsTab />
           </TabsContent>
         </Tabs>
       </Main>
