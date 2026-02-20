@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '~/components/ui/select'
 import { Separator } from '~/components/ui/separator'
+import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import { apps } from './+data/apps'
 
 const appText = new Map<string, string>([
@@ -27,7 +28,12 @@ const appText = new Map<string, string>([
   ['notConnected', 'Not Connected'],
 ])
 
+export const handle = {
+  breadcrumb: () => ({ label: 'Apps' }),
+}
+
 export default function Apps() {
+  const { Breadcrumbs } = useBreadcrumbs()
   const [sort, setSort] = useState('ascending')
   const [appType, setAppType] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
@@ -56,6 +62,8 @@ export default function Apps() {
           <ProfileDropdown />
         </div>
       </Header>
+
+      <Breadcrumbs />
 
       <Main fixed>
         <div>

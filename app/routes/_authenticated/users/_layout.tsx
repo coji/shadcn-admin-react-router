@@ -6,6 +6,7 @@ import { ProfileDropdown } from '~/components/profile-dropdown'
 import { Search } from '~/components/search'
 import { ThemeSwitch } from '~/components/theme-switch'
 import { Button } from '~/components/ui/button'
+import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import { columns } from './+components/users-columns'
 import { UsersTable } from './+components/users-table'
@@ -58,9 +59,14 @@ export const loader = ({ request }: Route.LoaderArgs) => {
   return { users, pagination, facetedCounts }
 }
 
+export const handle = {
+  breadcrumb: () => ({ label: 'Users', to: '/users' }),
+}
+
 export default function Users({
   loaderData: { users, pagination, facetedCounts },
 }: Route.ComponentProps) {
+  const { Breadcrumbs } = useBreadcrumbs()
   useSmartNavigation({ autoSave: true, baseUrl: href('/users') })
 
   return (
@@ -72,6 +78,8 @@ export default function Users({
           <ProfileDropdown />
         </div>
       </Header>
+
+      <Breadcrumbs />
 
       <Main>
         <div className="mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4">

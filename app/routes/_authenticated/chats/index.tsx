@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { Separator } from '~/components/ui/separator'
+import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import { cn } from '~/lib/utils'
 // Fake Data
 import { conversations } from './+data/convo.json'
@@ -30,7 +31,12 @@ import { conversations } from './+data/convo.json'
 type ChatUser = (typeof conversations)[number]
 type Convo = ChatUser['messages'][number]
 
+export const handle = {
+  breadcrumb: () => ({ label: 'Chats' }),
+}
+
 export default function Chats() {
+  const { Breadcrumbs } = useBreadcrumbs()
   const [search, setSearch] = useState('')
   const [selectedUser, setSelectedUser] = useState<ChatUser>(conversations[0])
   const [mobileSelectedUser, setMobileSelectedUser] = useState<ChatUser | null>(
@@ -68,6 +74,8 @@ export default function Chats() {
           <ProfileDropdown />
         </div>
       </Header>
+
+      <Breadcrumbs />
 
       <Main fixed>
         <section className="flex h-full gap-6">

@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from '~/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import { AnalyticsTab } from './+components/analytics-tab'
 import { NotificationsTab } from './+components/notifications-tab'
 import { Overview } from './+components/overview'
@@ -42,7 +43,13 @@ const topNav = [
   },
 ]
 
+export const handle = {
+  breadcrumb: () => ({ label: 'Dashboard' }),
+}
+
 export default function Dashboard() {
+  const { Breadcrumbs } = useBreadcrumbs()
+
   return (
     <>
       <Header>
@@ -53,6 +60,8 @@ export default function Dashboard() {
           <ProfileDropdown />
         </div>
       </Header>
+
+      <Breadcrumbs />
 
       <Main>
         <div className="mb-2 flex items-center justify-between space-y-2">

@@ -12,9 +12,16 @@ import { ProfileDropdown } from '~/components/profile-dropdown'
 import { Search } from '~/components/search'
 import { ThemeSwitch } from '~/components/theme-switch'
 import { Separator } from '~/components/ui/separator'
+import { useBreadcrumbs } from '~/hooks/use-breadcrumbs'
 import SidebarNav from './+components/sidebar-nav'
 
+export const handle = {
+  breadcrumb: () => ({ label: 'Settings', to: '/settings' }),
+}
+
 export default function Settings() {
+  const { Breadcrumbs } = useBreadcrumbs()
+
   return (
     <>
       <Header>
@@ -24,6 +31,8 @@ export default function Settings() {
           <ProfileDropdown />
         </div>
       </Header>
+
+      <Breadcrumbs />
 
       <Main>
         <div className="space-y-0.5">
