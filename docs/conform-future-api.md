@@ -13,7 +13,7 @@ Compared to the legacy API (`getFormProps`, `getInputProps`, `parseWithZod`, etc
 
 ## Architecture
 
-```
+```text
 app/lib/forms.ts              <- configureForms() defines project-wide useForm
 app/components/conform/*.tsx   <- shadcn/ui wrappers (useControl-based)
 app/routes/**/+schema.ts       <- Zod schemas (wrapped with coerceFormValue)

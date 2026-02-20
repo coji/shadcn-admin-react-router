@@ -18,10 +18,9 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const result = schema.safeParse(submission.payload)
 
   if (!result.success) {
-    throw dataWithError(
-      report(submission, { error: { issues: result.error.issues } }),
-      { message: 'Invalid submission' },
-    )
+    return {
+      result: report(submission, { error: { issues: result.error.issues } }),
+    }
   }
 
   // update task label

@@ -13,6 +13,7 @@ import type { action } from './index'
 // This can come from your database or API.
 const defaultValue = {
   theme: 'light',
+  font: 'inter',
 }
 
 export function AppearanceForm() {

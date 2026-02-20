@@ -14,7 +14,7 @@ export const profileFormSchema = coerceFormValue(
     email: z.email({
       error: (issue) =>
         issue.input === undefined
-          ? 'Please select an email to display.'
+          ? 'Please enter your email address.'
           : 'Invalid email address',
     }),
     bio: z

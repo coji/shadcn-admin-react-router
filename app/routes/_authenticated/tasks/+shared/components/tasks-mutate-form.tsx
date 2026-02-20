@@ -1,5 +1,6 @@
+import type { SubmissionResult } from '@conform-to/react/future'
 import { coerceFormValue } from '@conform-to/zod/v4/future'
-import { Form, href, Link, useNavigation } from 'react-router'
+import { Form, href, Link, useActionData, useNavigation } from 'react-router'
 import { z } from 'zod'
 import {
   RadioGroup as ConformRadioGroup,
@@ -73,7 +74,9 @@ const formSchema = coerceFormValue(
 
 export function TasksMutateForm({ task }: { task?: Task }) {
   const isUpdate = !!task
+  const actionData = useActionData<{ result: SubmissionResult }>()
   const { form, fields } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: task ?? {
       title: '',
       status: '',

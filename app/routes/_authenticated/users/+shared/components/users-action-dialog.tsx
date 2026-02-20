@@ -284,6 +284,7 @@ export function UsersActionDialog({ user, open, onOpenChange }: Props) {
               <ConformSelect
                 {...fields.role.selectProps}
                 placeholder="Select a role"
+                className="col-span-4"
               >
                 {userTypes.map(({ label, value }) => (
                   <SelectItem key={value} value={value}>

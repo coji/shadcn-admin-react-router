@@ -65,7 +65,7 @@ export default function TaskImport() {
 
       <Separator className="my-4 lg:my-6" />
 
-      <Form {...form.props}>
+      <Form method="POST" {...form.props}>
         <div className="mb-2 space-y-1">
           <Label htmlFor={fields.file.id}>File</Label>
           <Input {...fields.file.inputProps} type="file" />

@@ -37,7 +37,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   return redirectWithSuccess(href('/tasks'), {
     message: 'Task created successfully',
-    description: JSON.stringify(result.data),
+    description: JSON.stringify(task),
   })
 }
 

@@ -22,7 +22,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
     }
   }
 
-  // Create a new task
+  // Create a new user
   await sleep(1000)
   const newUser = {
     ...result.data,

@@ -1,5 +1,6 @@
+import type { SubmissionResult } from '@conform-to/react/future'
 import { IconMailPlus, IconSend } from '@tabler/icons-react'
-import { Form, useNavigation } from 'react-router'
+import { Form, useActionData, useNavigation } from 'react-router'
 import { Select as ConformSelect } from '~/components/conform'
 import { Button } from '~/components/ui/button'
 import {
@@ -24,7 +25,9 @@ interface Props {
 }
 
 export function UsersInviteDialog({ open, onOpenChange }: Props) {
+  const actionData = useActionData<{ result: SubmissionResult }>()
   const { form, fields, intent } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: { email: '', role: '', desc: '' },
   })
   const navigation = useNavigation()
