@@ -47,7 +47,7 @@ export default function Dashboard() {
     <>
       <Header>
         <TopNav links={topNav} />
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="ml-auto flex items-center gap-4">
           <Search />
           <ThemeSwitch />
           <ProfileDropdown />

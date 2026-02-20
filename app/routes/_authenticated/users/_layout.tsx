@@ -67,16 +67,16 @@ export default function Users({
     <>
       <Header fixed>
         <Search />
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="ml-auto flex items-center gap-4">
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
       </Header>
 
       <Main>
-        <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
+        <div className="mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">User List</h2>
+            <h1 className="text-2xl font-bold tracking-tight">User List</h1>
             <p className="text-muted-foreground">
               Manage your users and their roles here.
             </p>
