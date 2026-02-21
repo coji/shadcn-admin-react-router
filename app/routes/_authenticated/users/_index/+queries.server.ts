@@ -75,7 +75,7 @@ export const getFacetedCounts = ({
 }: GetFacetedCountsArgs) => {
   const facetedCounts: Record<string, Record<string, number>> = {}
 
-  // For each facet, filter the tasks based on the filters and count the occurrences
+  // For each facet, filter the users based on the filters and count the occurrences
   for (const facet of facets) {
     // Filter the users based on the filters
     const filteredUsers = initialUsers

@@ -26,7 +26,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   }
   await setTimeout(1000)
 
-  throw await redirectWithSuccess(href('/'), {
+  return redirectWithSuccess(href('/'), {
     message: 'You have successfully logged in!',
   })
 }

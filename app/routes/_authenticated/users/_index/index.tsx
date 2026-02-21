@@ -26,13 +26,13 @@ export const handle: RouteHandle = {
 }
 
 export const loader = ({ request }: Route.LoaderArgs) => {
-  const searchParams = new URLSearchParams(new URL(request.url).searchParams)
+  const searchParams = new URL(request.url).searchParams
 
   const { username } = QuerySchema.parse({
     username: searchParams.get('username'),
   })
 
-  const { ...filters } = FilterSchema.parse({
+  const filters = FilterSchema.parse({
     status: searchParams.getAll('status'),
     priority: searchParams.getAll('priority'),
   })
@@ -93,7 +93,7 @@ export default function Users({
         </PageHeaderActions>
       </PageHeader>
       {/* Breakout: negate Main's px-4 so the table can use full width */}
-      <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
+      <div className="-mx-4 flex-1 overflow-auto px-4 py-1">
         <UsersTable
           data={users}
           columns={columns}

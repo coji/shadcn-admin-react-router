@@ -73,9 +73,9 @@ export default function TaskImport({ actionData }: Route.ComponentProps) {
       </PageHeader>
 
       <Form
+        {...form.props}
         method="POST"
         encType="multipart/form-data"
-        {...form.props}
         className="max-w-2xl"
       >
         <Separator className="my-4 lg:my-6" />

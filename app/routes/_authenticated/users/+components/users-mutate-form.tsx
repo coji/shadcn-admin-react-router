@@ -118,7 +118,7 @@ export function UsersMutateForm({
           confirmPassword: '',
         },
   })
-  const isPasswordTouched = fields.password?.touched
+  const isPasswordTouched = fields.password.touched
   const navigation = useNavigation()
   const { backUrl } = useSmartNavigation({ baseUrl: href('/users') })
 

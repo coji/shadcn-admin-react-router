@@ -12,8 +12,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import { UserDeleteConfirmDialog } from '../../$user.delete'
 import type { User } from '../../+data/schema'
+import { UserDeleteConfirmDialog } from './user-delete-confirm-dialog'
 
 interface DataTableRowActionsProps {
   row: Row<User>
@@ -45,7 +45,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="text-red-500"
+            className="text-destructive"
             onSelect={() => setDeleteDialogOpen(true)}
           >
             Delete
