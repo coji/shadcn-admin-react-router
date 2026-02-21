@@ -48,14 +48,15 @@ export const action = async ({ request }: Route.ActionArgs) => {
   await sleep(1000)
 
   // Create a new task
-  return redirectWithSuccess('tasks', {
+  return redirectWithSuccess(href('/tasks'), {
     message: 'Tasks imported successfully.',
-    description: JSON.stringify(result.data),
+    description: `File: ${result.data.file.name}`,
   })
 }
 
-export default function TaskImport() {
+export default function TaskImport({ actionData }: Route.ComponentProps) {
   const { form, fields } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: { file: undefined },
   })
   const { backUrl } = useSmartNavigation({ baseUrl: href('/tasks') })
@@ -73,7 +74,7 @@ export default function TaskImport() {
 
       <Separator className="my-4 lg:my-6" />
 
-      <Form method="POST" {...form.props} className="max-w-2xl">
+      <Form method="POST" encType="multipart/form-data" {...form.props} className="max-w-2xl">
         <div className="mb-2 space-y-1">
           <Label htmlFor={fields.file.id}>File</Label>
           <Input {...fields.file.inputProps} type="file" />
