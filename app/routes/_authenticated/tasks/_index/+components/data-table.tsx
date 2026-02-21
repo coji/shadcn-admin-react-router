@@ -15,25 +15,27 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table'
+import type { Task } from '../../+shared/data/schema'
+import { DataTableFloatingBar } from './data-table-floating-bar'
 import {
   DataTablePagination,
   type PaginationProps,
 } from './data-table-pagination'
 import { DataTableToolbar, type FacetedCountProps } from './data-table-toolbar'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps {
+  columns: ColumnDef<Task>[]
+  data: Task[]
   pagination: PaginationProps
   facetedCounts?: FacetedCountProps
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable({
   columns,
   data,
   pagination,
   facetedCounts,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -106,6 +108,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} pagination={pagination} />
+      <DataTableFloatingBar table={table} />
     </div>
   )
 }

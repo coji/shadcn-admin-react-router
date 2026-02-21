@@ -21,6 +21,7 @@ import {
   DataTablePagination,
   type PaginationProps,
 } from './data-table-pagination'
+import { DataTableFloatingBar } from './data-table-floating-bar'
 import { DataTableToolbar, type FacetedCountProps } from './data-table-toolbar'
 
 declare module '@tanstack/react-table' {
@@ -121,6 +122,7 @@ export function UsersTable({
         </Table>
       </div>
       <DataTablePagination table={table} pagination={pagination} />
+      <DataTableFloatingBar table={table} />
     </div>
   )
 }
