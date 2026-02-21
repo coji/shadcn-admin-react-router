@@ -17,11 +17,11 @@ import {
   TableRow,
 } from '~/components/ui/table'
 import type { User } from '../../+data/schema'
+import { DataTableFloatingBar } from './data-table-floating-bar'
 import {
   DataTablePagination,
   type PaginationProps,
 } from './data-table-pagination'
-import { DataTableFloatingBar } from './data-table-floating-bar'
 import { DataTableToolbar, type FacetedCountProps } from './data-table-toolbar'
 
 declare module '@tanstack/react-table' {
