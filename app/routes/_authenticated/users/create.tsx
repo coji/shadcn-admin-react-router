@@ -45,7 +45,7 @@ export default function UserCreate() {
       <div className="text-center sm:text-left">
         <h2 className="text-foreground text-lg font-semibold">Add New User</h2>
         <div className="text-muted-foreground text-sm">
-          Create new user here. Click save when you&apos;re done.
+          Create a new user here. Click save when you&apos;re done.
         </div>
       </div>
 

@@ -96,7 +96,7 @@ export function UserDeleteConfirmDialog({
           <Alert variant="destructive">
             <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
-              Please be carefull, this operation can not be rolled back.
+              Please be careful, this operation cannot be rolled back.
             </AlertDescription>
           </Alert>
         </div>
