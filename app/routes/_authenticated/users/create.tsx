@@ -9,11 +9,8 @@ import {
   PageHeaderTitle,
 } from '~/components/layout/page-header'
 import type { RouteHandle } from '~/routes/_authenticated/_layout'
-import {
-  TasksMutateForm,
-  createSchema,
-} from './+shared/components/tasks-mutate-form'
-import { tasks } from './+shared/data/tasks'
+import { UsersMutateForm, createSchema } from './+components/users-mutate-form'
+import { users } from './+data/users'
 import type { Route } from './+types/create'
 
 export const handle: RouteHandle = {
@@ -21,6 +18,7 @@ export const handle: RouteHandle = {
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {
+  const url = new URL(request.url)
   const submission = parseSubmission(await request.formData())
   const result = createSchema.safeParse(submission.payload)
 
@@ -30,36 +28,39 @@ export const action = async ({ request }: Route.ActionArgs) => {
     }
   }
 
-  // Create a new task
+  // Create a new user
   await sleep(1000)
-  const task = result.data
-  const maxIdNumber = tasks.reduce((max, t) => {
-    const idNumber = Number.parseInt(t.id.split('-')[1], 10)
-    return idNumber > max ? idNumber : max
-  }, 0)
-  const id = `TASK-${String(maxIdNumber + 1).padStart(4, '0')}`
-  tasks.unshift({ id, ...task })
+  const newUser = {
+    ...result.data,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    id: crypto.randomUUID(),
+    status: 'active',
+  } as const
+  users.unshift(newUser)
 
-  return redirectWithSuccess(href('/tasks'), {
-    message: 'Task created successfully',
-    description: JSON.stringify(task),
-  })
+  return redirectWithSuccess(
+    `${href('/users')}?${url.searchParams.toString()}`,
+    {
+      message: 'User added successfully',
+      description: JSON.stringify(newUser),
+    },
+  )
 }
 
-export default function TaskCreate({ actionData }: Route.ComponentProps) {
+export default function UserCreate({ actionData }: Route.ComponentProps) {
   return (
     <div>
       <PageHeader>
         <PageHeaderHeading>
-          <PageHeaderTitle>Create Task</PageHeaderTitle>
+          <PageHeaderTitle>Add New User</PageHeaderTitle>
           <PageHeaderDescription>
-            Add a new task by providing necessary info. Click save when
-            you&apos;re done.
+            Create a new user here. Click save when you&apos;re done.
           </PageHeaderDescription>
         </PageHeaderHeading>
       </PageHeader>
 
-      <TasksMutateForm actionData={actionData} />
+      <UsersMutateForm actionData={actionData} />
     </div>
   )
 }

@@ -4,6 +4,12 @@ import { setTimeout as sleep } from 'node:timers/promises'
 import { Form, href, Link } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
@@ -42,30 +48,37 @@ export const action = async ({ request }: Route.ActionArgs) => {
   await sleep(1000)
 
   // Create a new task
-  return redirectWithSuccess('tasks', {
+  return redirectWithSuccess(href('/tasks'), {
     message: 'Tasks imported successfully.',
-    description: JSON.stringify(result.data),
+    description: `File: ${result.data.file.name}`,
   })
 }
 
-export default function TaskImport() {
+export default function TaskImport({ actionData }: Route.ComponentProps) {
   const { form, fields } = useForm(formSchema, {
+    lastResult: actionData?.result,
     defaultValue: { file: undefined },
   })
   const { backUrl } = useSmartNavigation({ baseUrl: href('/tasks') })
 
   return (
     <div>
-      <div className="text-center sm:text-left">
-        <h2 className="text-foreground text-lg font-semibold">Import Task</h2>
-        <div className="text-muted-foreground text-sm">
-          Import tasks quickly from a CSV file.
-        </div>
-      </div>
+      <PageHeader>
+        <PageHeaderHeading>
+          <PageHeaderTitle>Import Task</PageHeaderTitle>
+          <PageHeaderDescription>
+            Import tasks quickly from a CSV file.
+          </PageHeaderDescription>
+        </PageHeaderHeading>
+      </PageHeader>
 
-      <Separator className="my-4 lg:my-6" />
-
-      <Form method="POST" {...form.props}>
+      <Form
+        {...form.props}
+        method="POST"
+        encType="multipart/form-data"
+        className="max-w-2xl"
+      >
+        <Separator className="my-4 lg:my-6" />
         <div className="mb-2 space-y-1">
           <Label htmlFor={fields.file.id}>File</Label>
           <Input {...fields.file.inputProps} type="file" />

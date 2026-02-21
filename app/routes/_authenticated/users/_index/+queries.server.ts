@@ -1,4 +1,4 @@
-import { users as initialUsers } from './+shared/data/users'
+import { users as initialUsers } from '../+data/users'
 
 interface ListFilteredUsersArgs {
   username: string
@@ -75,7 +75,7 @@ export const getFacetedCounts = ({
 }: GetFacetedCountsArgs) => {
   const facetedCounts: Record<string, Record<string, number>> = {}
 
-  // For each facet, filter the tasks based on the filters and count the occurrences
+  // For each facet, filter the users based on the filters and count the occurrences
   for (const facet of facets) {
     // Filter the users based on the filters
     const filteredUsers = initialUsers

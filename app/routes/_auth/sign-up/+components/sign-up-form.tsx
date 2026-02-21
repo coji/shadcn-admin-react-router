@@ -15,7 +15,6 @@ type SignUpFormProps = HTMLAttributes<HTMLFormElement>
 
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const actionData = useActionData<typeof action>()
-
   const { form, fields } = useForm(formSchema, {
     lastResult: actionData?.result,
     defaultValue: {

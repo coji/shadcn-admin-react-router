@@ -1,15 +1,21 @@
 import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { useState } from 'react'
 import { data, href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
-import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import {
-  UsersActionDialog,
-  editSchema as formSchema,
-} from './+shared/components/users-action-dialog'
-import { users } from './+shared/data/users'
-import type { Route } from './+types/$user.update'
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
+import { UsersMutateForm, editSchema } from './+components/users-mutate-form'
+import { users } from './+data/users'
+import type { Route } from './+types/$user._index'
+
+export const handle: RouteHandle = {
+  breadcrumb: () => ({ label: 'Edit' }),
+}
 
 export const loader = ({ params }: Route.LoaderArgs) => {
   const user = users.find((u) => u.id === params.user)
@@ -27,7 +33,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   }
 
   const submission = parseSubmission(await request.formData())
-  const result = formSchema.safeParse(submission.payload)
+  const result = editSchema.safeParse(submission.payload)
 
   if (!result.success) {
     return {
@@ -48,31 +54,31 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   users.length = 0
   users.push(...updatedUsers)
 
-  return redirectWithSuccess(`/users?${url.searchParams.toString()}`, {
-    message: 'User updated successfully',
-    description: JSON.stringify(updatedUser),
-  })
+  return redirectWithSuccess(
+    `${href('/users')}?${url.searchParams.toString()}`,
+    {
+      message: 'User updated successfully',
+      description: `The user ${updatedUser.username} has been updated.`,
+    },
+  )
 }
 
-export default function UserUpdate({
+export default function UserEdit({
   loaderData: { user },
+  actionData,
 }: Route.ComponentProps) {
-  const [open, setOpen] = useState(true)
-  const { goBack } = useSmartNavigation({ baseUrl: href('/users') })
   return (
-    <UsersActionDialog
-      key={`user-edit-${user.id}`}
-      user={user}
-      open={open}
-      onOpenChange={(v) => {
-        if (!v) {
-          setOpen(false)
-          // wait for the modal to close
-          setTimeout(() => {
-            goBack()
-          }, 300) // the duration of the modal close animation
-        }
-      }}
-    />
+    <div>
+      <PageHeader>
+        <PageHeaderHeading>
+          <PageHeaderTitle>Edit User</PageHeaderTitle>
+          <PageHeaderDescription>
+            Update the user here. Click save when you&apos;re done.
+          </PageHeaderDescription>
+        </PageHeaderHeading>
+      </PageHeader>
+
+      <UsersMutateForm user={user} actionData={actionData} />
+    </div>
   )
 }

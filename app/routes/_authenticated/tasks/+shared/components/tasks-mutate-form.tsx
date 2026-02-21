@@ -1,6 +1,6 @@
 import type { SubmissionResult } from '@conform-to/react/future'
 import { coerceFormValue } from '@conform-to/zod/v4/future'
-import { Form, href, Link, useActionData, useNavigation } from 'react-router'
+import { Form, href, Link, useNavigation } from 'react-router'
 import { z } from 'zod'
 import {
   RadioGroup as ConformRadioGroup,
@@ -17,65 +17,31 @@ import { useSmartNavigation } from '~/hooks/use-smart-navigation'
 import { useForm } from '~/lib/forms'
 import type { Task } from '../data/schema'
 
-export const createSchema = coerceFormValue(
-  z.object({
-    intent: z.literal('create'),
-    title: z
-      .string({
-        error: 'Title is required.',
-      })
-      .trim()
-      .min(1, 'Title is required.'),
-    status: z.string({ error: 'Please select a status.' }),
-    label: z.string({ error: 'Please select a label.' }),
-    priority: z.string({ error: 'Please choose a priority.' }),
-  }),
-)
+const baseFields = {
+  title: z
+    .string({ error: 'Title is required.' })
+    .trim()
+    .min(1, 'Title is required.'),
+  status: z.string({ error: 'Please select a status.' }),
+  label: z.string({ error: 'Please select a label.' }),
+  priority: z.string({ error: 'Please choose a priority.' }),
+}
+
+export const createSchema = coerceFormValue(z.object(baseFields))
 
 export const updateSchema = coerceFormValue(
-  z.object({
-    intent: z.literal('update'),
-    id: z.string(),
-    title: z
-      .string({ error: 'Title is required.' })
-      .trim()
-      .min(1, 'Title is required.'),
-    status: z.string({ error: 'Please select a status.' }),
-    label: z.string({ error: 'Please select a label.' }),
-    priority: z.string({ error: 'Please choose a priority.' }),
-  }),
+  z.object({ id: z.string(), ...baseFields }),
 )
 
-const formSchema = coerceFormValue(
-  z.discriminatedUnion('intent', [
-    z.object({
-      intent: z.literal('create'),
-      title: z
-        .string({ error: 'Title is required.' })
-        .trim()
-        .min(1, 'Title is required.'),
-      status: z.string({ error: 'Please select a status.' }),
-      label: z.string({ error: 'Please select a label.' }),
-      priority: z.string({ error: 'Please choose a priority.' }),
-    }),
-    z.object({
-      intent: z.literal('update'),
-      id: z.string(),
-      title: z
-        .string({ error: 'Title is required.' })
-        .trim()
-        .min(1, 'Title is required.'),
-      status: z.string({ error: 'Please select a status.' }),
-      label: z.string({ error: 'Please select a label.' }),
-      priority: z.string({ error: 'Please choose a priority.' }),
-    }),
-  ]),
-)
-
-export function TasksMutateForm({ task }: { task?: Task }) {
+export function TasksMutateForm({
+  task,
+  actionData,
+}: {
+  task?: Task
+  actionData?: { result: SubmissionResult }
+}) {
   const isUpdate = !!task
-  const actionData = useActionData<{ result: SubmissionResult }>()
-  const { form, fields } = useForm(formSchema, {
+  const { form, fields } = useForm(isUpdate ? updateSchema : createSchema, {
     lastResult: actionData?.result,
     defaultValue: task ?? {
       title: '',
@@ -88,12 +54,9 @@ export function TasksMutateForm({ task }: { task?: Task }) {
   const { backUrl } = useSmartNavigation({ baseUrl: href('/tasks') })
 
   return (
-    <Form method="POST" {...form.props} className="space-y-5">
-      <input
-        type="hidden"
-        name={fields.id.name}
-        defaultValue={fields.id.defaultValue}
-      />
+    <Form method="POST" {...form.props} className="max-w-2xl space-y-5">
+      <Separator className="my-4 lg:my-6" />
+      {isUpdate && <input type="hidden" name="id" defaultValue={task.id} />}
       <div className="space-y-1">
         <Label htmlFor={fields.title.id}>Title</Label>
         <Input
