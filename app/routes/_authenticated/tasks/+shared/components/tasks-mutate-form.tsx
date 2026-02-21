@@ -88,7 +88,7 @@ export function TasksMutateForm({ task }: { task?: Task }) {
   const { backUrl } = useSmartNavigation({ baseUrl: href('/tasks') })
 
   return (
-    <Form method="POST" {...form.props} className="space-y-5">
+    <Form method="POST" {...form.props} className="max-w-2xl space-y-5">
       <input
         type="hidden"
         name={fields.id.name}

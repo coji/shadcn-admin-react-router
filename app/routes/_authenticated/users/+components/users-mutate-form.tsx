@@ -148,7 +148,7 @@ export function UsersMutateForm({ user }: { user?: User }) {
   const { backUrl } = useSmartNavigation({ baseUrl: href('/users') })
 
   return (
-    <Form method="POST" {...form.props} className="space-y-4">
+    <Form method="POST" {...form.props} className="max-w-2xl space-y-4">
       <div className="grid gap-2 sm:grid-cols-2">
         <div className="space-y-1">
           <Label htmlFor={fields.firstName.id}>First Name</Label>

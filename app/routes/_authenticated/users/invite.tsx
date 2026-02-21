@@ -6,6 +6,12 @@ import { Form, href, Link, useActionData, useNavigation } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { Select as ConformSelect } from '~/components/conform'
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
@@ -67,17 +73,19 @@ export default function UserInvite() {
 
   return (
     <div>
-      <div className="text-center sm:text-left">
-        <h2 className="text-foreground text-lg font-semibold">Invite User</h2>
-        <div className="text-muted-foreground text-sm">
-          Invite new user to join your team by sending them an email invitation.
-          Assign a role to define their access level.
-        </div>
-      </div>
+      <PageHeader>
+        <PageHeaderHeading>
+          <PageHeaderTitle>Invite User</PageHeaderTitle>
+          <PageHeaderDescription>
+            Invite new user to join your team by sending them an email
+            invitation. Assign a role to define their access level.
+          </PageHeaderDescription>
+        </PageHeaderHeading>
+      </PageHeader>
 
       <Separator className="my-4 lg:my-6" />
 
-      <Form method="POST" {...form.props} className="space-y-4">
+      <Form method="POST" {...form.props} className="max-w-2xl space-y-4">
         <div className="space-y-1">
           <Label htmlFor={fields.email.id}>Email</Label>
           <Input

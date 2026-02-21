@@ -2,6 +2,12 @@ import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
 import { Separator } from '~/components/ui/separator'
 import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import {
@@ -44,13 +50,15 @@ export const action = async ({ request }: Route.ActionArgs) => {
 export default function TaskCreate() {
   return (
     <div>
-      <div className="text-center sm:text-left">
-        <h2 className="text-foreground text-lg font-semibold">Create Task</h2>
-        <div className="text-muted-foreground text-sm">
-          Add a new task by providing necessary info. Click save when
-          you&apos;re done.
-        </div>
-      </div>
+      <PageHeader>
+        <PageHeaderHeading>
+          <PageHeaderTitle>Create Task</PageHeaderTitle>
+          <PageHeaderDescription>
+            Add a new task by providing necessary info. Click save when
+            you&apos;re done.
+          </PageHeaderDescription>
+        </PageHeaderHeading>
+      </PageHeader>
 
       <Separator className="my-4 lg:my-6" />
 
