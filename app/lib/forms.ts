@@ -11,7 +11,7 @@ import { getConstraints } from '@conform-to/zod/v4/future'
 
 const forms = configureForms({
   getConstraints,
-  shouldValidate: 'onInput',
+  shouldValidate: 'onSubmit',
   shouldRevalidate: 'onBlur',
   extendFieldMetadata(metadata) {
     return {

@@ -32,7 +32,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   // Create a new task
   await sleep(1000)
-  const { intent: _intent, ...task } = result.data
+  const task = result.data
   const maxIdNumber = tasks.reduce((max, t) => {
     const idNumber = Number.parseInt(t.id.split('-')[1], 10)
     return idNumber > max ? idNumber : max

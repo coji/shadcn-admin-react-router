@@ -31,86 +31,60 @@ const baseSchema = z.object({
   }),
 })
 
+const passwordFields = z.object({
+  password: z
+    .string({
+      error: (issue) =>
+        issue.input === undefined
+          ? 'Password is required.'
+          : 'Invalid password',
+    })
+    .trim()
+    .min(8, { error: 'Password must be at least 8 characters long.' })
+    .regex(/[a-z]/, {
+      error: 'Password must contain at least one lowercase letter.',
+    })
+    .regex(/\d/, { error: 'Password must contain at least one number.' }),
+  confirmPassword: z
+    .string({
+      error: (issue) =>
+        issue.input === undefined
+          ? 'Confirm Password is required.'
+          : 'Please confirm your password.',
+    })
+    .trim()
+    .min(8, { error: 'Password must be at least 8 characters long.' })
+    .regex(/[a-z]/, {
+      error: 'Password must contain at least one lowercase letter.',
+    })
+    .regex(/\d/, { error: 'Password must contain at least one number.' }),
+})
+
 export const createSchema = coerceFormValue(
-  baseSchema.merge(
-    z.object({
-      intent: z.literal('create'),
-      password: z
-        .string({
-          error: (issue) =>
-            issue.input === undefined
-              ? 'Password is required.'
-              : 'Invalid password',
+  z
+    .object({ ...baseSchema.shape, ...passwordFields.shape })
+    .superRefine((arg, ctx) => {
+      if (arg.password !== arg.confirmPassword) {
+        ctx.addIssue({
+          code: 'custom',
+          message: "Passwords don't match.",
+          path: ['confirmPassword'],
         })
-        .trim()
-        .min(8, { error: 'Password must be at least 8 characters long.' })
-        .regex(/[a-z]/, {
-          error: 'Password must contain at least one lowercase letter.',
-        })
-        .regex(/\d/, { error: 'Password must contain at least one number.' }),
-      confirmPassword: z
-        .string({
-          error: (issue) =>
-            issue.input === undefined
-              ? 'Confirm Password is required.'
-              : 'Please confirm your password.',
-        })
-        .trim()
-        .min(8, { error: 'Password must be at least 8 characters long.' })
-        .regex(/[a-z]/, {
-          error: 'Password must contain at least one lowercase letter.',
-        })
-        .regex(/\d/, { error: 'Password must contain at least one number.' }),
+      }
     }),
-  ),
 )
 
-export const editSchema = coerceFormValue(
-  baseSchema.merge(z.object({ intent: z.literal('edit') })),
-)
+export const editSchema = coerceFormValue(baseSchema)
 
 const formSchema = coerceFormValue(
   z
-    .discriminatedUnion('intent', [
-      baseSchema.merge(
-        z.object({
-          intent: z.literal('create'),
-          password: z
-            .string({
-              error: (issue) =>
-                issue.input === undefined
-                  ? 'Password is required.'
-                  : 'Invalid password',
-            })
-            .trim()
-            .min(8, { error: 'Password must be at least 8 characters long.' })
-            .regex(/[a-z]/, {
-              error: 'Password must contain at least one lowercase letter.',
-            })
-            .regex(/\d/, {
-              error: 'Password must contain at least one number.',
-            }),
-          confirmPassword: z
-            .string({
-              error: (issue) =>
-                issue.input === undefined
-                  ? 'Confirm Password is required.'
-                  : 'Please confirm your password.',
-            })
-            .trim()
-            .min(8, { error: 'Password must be at least 8 characters long.' })
-            .regex(/[a-z]/, {
-              error: 'Password must contain at least one lowercase letter.',
-            })
-            .regex(/\d/, {
-              error: 'Password must contain at least one number.',
-            }),
-        }),
-      ),
-      baseSchema.merge(z.object({ intent: z.literal('edit') })),
-    ])
+    .object({
+      ...baseSchema.shape,
+      password: passwordFields.shape.password.optional(),
+      confirmPassword: passwordFields.shape.confirmPassword.optional(),
+    })
     .superRefine((arg, ctx) => {
-      if (arg.intent !== 'create') return
+      if (!arg.password && !arg.confirmPassword) return
       if (arg.password !== arg.confirmPassword) {
         ctx.addIssue({
           code: 'custom',
@@ -127,11 +101,7 @@ export function UsersMutateForm({ user }: { user?: User }) {
   const { form, fields } = useForm(formSchema, {
     lastResult: actionData?.result,
     defaultValue: isEdit
-      ? {
-          ...user,
-          password: '',
-          confirmPassword: '',
-        }
+      ? { ...user }
       : {
           firstName: '',
           lastName: '',
@@ -143,7 +113,7 @@ export function UsersMutateForm({ user }: { user?: User }) {
           confirmPassword: '',
         },
   })
-  const isPasswordTouched = fields.password.touched
+  const isPasswordTouched = fields.password?.touched
   const navigation = useNavigation()
   const { backUrl } = useSmartNavigation({ baseUrl: href('/users') })
 
