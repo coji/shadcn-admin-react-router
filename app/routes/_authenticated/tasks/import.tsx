@@ -4,6 +4,12 @@ import { setTimeout as sleep } from 'node:timers/promises'
 import { Form, href, Link } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+  PageHeaderTitle,
+} from '~/components/layout/page-header'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
@@ -56,16 +62,18 @@ export default function TaskImport() {
 
   return (
     <div>
-      <div className="text-center sm:text-left">
-        <h2 className="text-foreground text-lg font-semibold">Import Task</h2>
-        <div className="text-muted-foreground text-sm">
-          Import tasks quickly from a CSV file.
-        </div>
-      </div>
+      <PageHeader>
+        <PageHeaderHeading>
+          <PageHeaderTitle>Import Task</PageHeaderTitle>
+          <PageHeaderDescription>
+            Import tasks quickly from a CSV file.
+          </PageHeaderDescription>
+        </PageHeaderHeading>
+      </PageHeader>
 
       <Separator className="my-4 lg:my-6" />
 
-      <Form method="POST" {...form.props}>
+      <Form method="POST" {...form.props} className="max-w-2xl">
         <div className="mb-2 space-y-1">
           <Label htmlFor={fields.file.id}>File</Label>
           <Input {...fields.file.inputProps} type="file" />
