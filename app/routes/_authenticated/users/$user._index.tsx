@@ -1,15 +1,16 @@
 import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { useState } from 'react'
-import { data, href } from 'react-router'
+import { data } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
-import { useSmartNavigation } from '~/hooks/use-smart-navigation'
-import {
-  UsersActionDialog,
-  editSchema as formSchema,
-} from './+shared/components/users-action-dialog'
-import { users } from './+shared/data/users'
-import type { Route } from './+types/$user.update'
+import { Separator } from '~/components/ui/separator'
+import type { RouteHandle } from '~/routes/_authenticated/_layout'
+import { UsersMutateForm, editSchema } from './+components/users-mutate-form'
+import { users } from './+data/users'
+import type { Route } from './+types/$user._index'
+
+export const handle: RouteHandle = {
+  breadcrumb: () => ({ label: 'Edit' }),
+}
 
 export const loader = ({ params }: Route.LoaderArgs) => {
   const user = users.find((u) => u.id === params.user)
@@ -27,7 +28,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   }
 
   const submission = parseSubmission(await request.formData())
-  const result = formSchema.safeParse(submission.payload)
+  const result = editSchema.safeParse(submission.payload)
 
   if (!result.success) {
     return {
@@ -50,29 +51,25 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   return redirectWithSuccess(`/users?${url.searchParams.toString()}`, {
     message: 'User updated successfully',
-    description: JSON.stringify(updatedUser),
+    description: `The user ${updatedUser.username} has been updated.`,
   })
 }
 
-export default function UserUpdate({
+export default function UserEdit({
   loaderData: { user },
 }: Route.ComponentProps) {
-  const [open, setOpen] = useState(true)
-  const { goBack } = useSmartNavigation({ baseUrl: href('/users') })
   return (
-    <UsersActionDialog
-      key={`user-edit-${user.id}`}
-      user={user}
-      open={open}
-      onOpenChange={(v) => {
-        if (!v) {
-          setOpen(false)
-          // wait for the modal to close
-          setTimeout(() => {
-            goBack()
-          }, 300) // the duration of the modal close animation
-        }
-      }}
-    />
+    <div>
+      <div className="text-center sm:text-left">
+        <h2 className="text-foreground text-lg font-semibold">Edit User</h2>
+        <div className="text-muted-foreground text-sm">
+          Update the user here. Click save when you&apos;re done.
+        </div>
+      </div>
+
+      <Separator className="my-4 lg:my-6" />
+
+      <UsersMutateForm user={user} />
+    </div>
   )
 }
