@@ -1,6 +1,6 @@
 import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { data } from 'react-router'
+import { data, href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import {
   PageHeader,
@@ -55,10 +55,13 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   users.length = 0
   users.push(...updatedUsers)
 
-  return redirectWithSuccess(`/users?${url.searchParams.toString()}`, {
-    message: 'User updated successfully',
-    description: `The user ${updatedUser.username} has been updated.`,
-  })
+  return redirectWithSuccess(
+    `${href('/users')}?${url.searchParams.toString()}`,
+    {
+      message: 'User updated successfully',
+      description: `The user ${updatedUser.username} has been updated.`,
+    },
+  )
 }
 
 export default function UserEdit({

@@ -1,6 +1,6 @@
 import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { data } from 'react-router'
+import { data, href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import {
   PageHeader,
@@ -48,10 +48,13 @@ export const action = async ({ request }: Route.ActionArgs) => {
   }
   tasks.splice(taskIndex, 1, result.data)
 
-  return redirectWithSuccess(`/tasks?${url.searchParams.toString()}`, {
-    message: 'Task updated successfully',
-    description: `The task ${result.data.id} has been updated.`,
-  })
+  return redirectWithSuccess(
+    `${href('/tasks')}?${url.searchParams.toString()}`,
+    {
+      message: 'Task updated successfully',
+      description: `The task ${result.data.id} has been updated.`,
+    },
+  )
 }
 
 export default function TaskEdit({

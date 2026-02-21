@@ -28,7 +28,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   }
   await setTimeout(1000)
 
-  throw await redirectWithSuccess('/', {
+  throw await redirectWithSuccess(href('/'), {
     message: 'Account created successfully!',
   })
 }

@@ -74,7 +74,12 @@ export default function TaskImport({ actionData }: Route.ComponentProps) {
 
       <Separator className="my-4 lg:my-6" />
 
-      <Form method="POST" encType="multipart/form-data" {...form.props} className="max-w-2xl">
+      <Form
+        method="POST"
+        encType="multipart/form-data"
+        {...form.props}
+        className="max-w-2xl"
+      >
         <div className="mb-2 space-y-1">
           <Label htmlFor={fields.file.id}>File</Label>
           <Input {...fields.file.inputProps} type="file" />

@@ -1,5 +1,6 @@
 import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout } from 'node:timers/promises'
+import { href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import ViteLogo from '~/assets/vite.svg'
 import { UserAuthForm } from './+components/user-auth-form'
@@ -25,7 +26,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   }
   await setTimeout(1000)
 
-  throw await redirectWithSuccess('/', {
+  throw await redirectWithSuccess(href('/'), {
     message: 'You have successfully logged in!',
   })
 }

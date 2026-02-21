@@ -1,5 +1,6 @@
 import { parseSubmission, report } from '@conform-to/react/future'
 import { setTimeout as sleep } from 'node:timers/promises'
+import { href } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import {
   PageHeader,
@@ -39,10 +40,13 @@ export const action = async ({ request }: Route.ActionArgs) => {
   } as const
   users.unshift(newUser)
 
-  return redirectWithSuccess(`/users?${url.searchParams.toString()}`, {
-    message: 'User added successfully',
-    description: JSON.stringify(newUser),
-  })
+  return redirectWithSuccess(
+    `${href('/users')}?${url.searchParams.toString()}`,
+    {
+      message: 'User added successfully',
+      description: JSON.stringify(newUser),
+    },
+  )
 }
 
 export default function UserCreate() {

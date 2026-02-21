@@ -56,10 +56,13 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   await sleep(1000)
 
-  return redirectWithSuccess(`/users?${url.searchParams.toString()}`, {
-    message: 'User invited successfully!',
-    description: JSON.stringify(result.data),
-  })
+  return redirectWithSuccess(
+    `${href('/users')}?${url.searchParams.toString()}`,
+    {
+      message: 'User invited successfully!',
+      description: JSON.stringify(result.data),
+    },
+  )
 }
 
 export default function UserInvite() {
