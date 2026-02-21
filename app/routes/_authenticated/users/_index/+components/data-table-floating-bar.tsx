@@ -1,6 +1,6 @@
 import { IconLoader, IconTrash, IconZoomReset } from '@tabler/icons-react'
 import type { Table } from '@tanstack/react-table'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { href, useFetcher } from 'react-router'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
@@ -21,11 +21,13 @@ export function DataTableFloatingBar({ table }: DataTableFloatingBarProps) {
 
   const isDeleting = deleteFetcher.state !== 'idle'
 
+  const prevDeletingRef = useRef(false)
   useEffect(() => {
-    if (deleteFetcher.data?.done) {
+    if (prevDeletingRef.current && !isDeleting && deleteFetcher.data?.done) {
       table.resetRowSelection()
     }
-  }, [deleteFetcher.data, table])
+    prevDeletingRef.current = isDeleting
+  }, [isDeleting, deleteFetcher.data, table])
 
   if (selectedCount === 0) return null
 
