@@ -17,6 +17,7 @@ import {
   TableRow,
 } from '~/components/ui/table'
 import type { User } from '../../+data/schema'
+import { DataTableFloatingBar } from './data-table-floating-bar'
 import {
   DataTablePagination,
   type PaginationProps,
@@ -121,6 +122,7 @@ export function UsersTable({
         </Table>
       </div>
       <DataTablePagination table={table} pagination={pagination} />
+      <DataTableFloatingBar table={table} />
     </div>
   )
 }
