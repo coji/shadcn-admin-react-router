@@ -31,7 +31,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   })
 }
 
-export default function SignIn2({ actionData }: Route.ComponentProps) {
+export default function SignIn2() {
   return (
     <div className="relative container grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="bg-muted relative hidden h-full flex-col p-10 text-white lg:flex dark:border-r">
@@ -80,7 +80,7 @@ export default function SignIn2({ actionData }: Route.ComponentProps) {
               to log into your account
             </p>
           </div>
-          <UserAuthForm actionData={actionData} />
+          <UserAuthForm />
           <p className="text-muted-foreground px-8 text-center text-sm">
             By clicking login, you agree to our{' '}
             <a

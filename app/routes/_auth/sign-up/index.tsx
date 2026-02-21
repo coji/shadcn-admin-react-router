@@ -33,7 +33,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   })
 }
 
-export default function SignUp({ actionData }: Route.ComponentProps) {
+export default function SignUp() {
   return (
     <Card className="p-6">
       <div className="mb-2 flex flex-col space-y-2 text-left">
@@ -51,7 +51,7 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
           </Link>
         </p>
       </div>
-      <SignUpForm actionData={actionData} />
+      <SignUpForm />
       <p className="text-muted-foreground mt-4 px-8 text-center text-sm">
         By creating an account, you agree to our{' '}
         <a
