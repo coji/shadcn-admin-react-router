@@ -4,24 +4,22 @@ import { z } from 'zod'
 import { tasks } from './+shared/data/tasks'
 import type { Route } from './+types/bulk-update'
 
-const schema = z
-  .object({ ids: z.array(z.string()).min(1) })
-  .and(
-    z.discriminatedUnion('field', [
-      z.object({
-        field: z.literal('label'),
-        value: z.enum(['bug', 'feature', 'documentation']),
-      }),
-      z.object({
-        field: z.literal('status'),
-        value: z.enum(['backlog', 'todo', 'in progress', 'done', 'canceled']),
-      }),
-      z.object({
-        field: z.literal('priority'),
-        value: z.enum(['high', 'medium', 'low']),
-      }),
-    ]),
-  )
+const schema = z.object({ ids: z.array(z.string()).min(1) }).and(
+  z.discriminatedUnion('field', [
+    z.object({
+      field: z.literal('label'),
+      value: z.enum(['bug', 'feature', 'documentation']),
+    }),
+    z.object({
+      field: z.literal('status'),
+      value: z.enum(['backlog', 'todo', 'in progress', 'done', 'canceled']),
+    }),
+    z.object({
+      field: z.literal('priority'),
+      value: z.enum(['high', 'medium', 'low']),
+    }),
+  ]),
+)
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const formData = await request.formData()

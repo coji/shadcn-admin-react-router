@@ -27,3 +27,4 @@ dist-ssr
 build/
 .vercel
 references
+.playwright-mcp
