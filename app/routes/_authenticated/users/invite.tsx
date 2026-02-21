@@ -86,9 +86,8 @@ export default function UserInvite() {
         </PageHeaderHeading>
       </PageHeader>
 
-      <Separator className="my-4 lg:my-6" />
-
       <Form method="POST" {...form.props} className="max-w-2xl space-y-4">
+        <Separator className="my-4 lg:my-6" />
         <div className="space-y-1">
           <Label htmlFor={fields.email.id}>Email</Label>
           <Input

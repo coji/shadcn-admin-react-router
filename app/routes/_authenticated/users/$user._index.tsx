@@ -8,7 +8,6 @@ import {
   PageHeaderHeading,
   PageHeaderTitle,
 } from '~/components/layout/page-header'
-import { Separator } from '~/components/ui/separator'
 import type { RouteHandle } from '~/routes/_authenticated/_layout'
 import { UsersMutateForm, editSchema } from './+components/users-mutate-form'
 import { users } from './+data/users'
@@ -77,8 +76,6 @@ export default function UserEdit({
           </PageHeaderDescription>
         </PageHeaderHeading>
       </PageHeader>
-
-      <Separator className="my-4 lg:my-6" />
 
       <UsersMutateForm user={user} />
     </div>

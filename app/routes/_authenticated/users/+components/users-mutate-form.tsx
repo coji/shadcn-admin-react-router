@@ -149,6 +149,7 @@ export function UsersMutateForm({ user }: { user?: User }) {
 
   return (
     <Form method="POST" {...form.props} className="max-w-2xl space-y-4">
+      <Separator className="my-4 lg:my-6" />
       <div className="grid gap-2 sm:grid-cols-2">
         <div className="space-y-1">
           <Label htmlFor={fields.firstName.id}>First Name</Label>

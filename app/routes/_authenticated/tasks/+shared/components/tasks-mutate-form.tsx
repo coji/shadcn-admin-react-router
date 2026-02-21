@@ -89,6 +89,7 @@ export function TasksMutateForm({ task }: { task?: Task }) {
 
   return (
     <Form method="POST" {...form.props} className="max-w-2xl space-y-5">
+      <Separator className="my-4 lg:my-6" />
       <input
         type="hidden"
         name={fields.id.name}
