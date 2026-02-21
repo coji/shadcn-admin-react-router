@@ -48,7 +48,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   )
 }
 
-export default function UserCreate() {
+export default function UserCreate({ actionData }: Route.ComponentProps) {
   return (
     <div>
       <PageHeader>
@@ -60,7 +60,7 @@ export default function UserCreate() {
         </PageHeaderHeading>
       </PageHeader>
 
-      <UsersMutateForm />
+      <UsersMutateForm actionData={actionData} />
     </div>
   )
 }

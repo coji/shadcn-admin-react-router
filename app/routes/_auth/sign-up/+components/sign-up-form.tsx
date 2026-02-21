@@ -1,6 +1,6 @@
 import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
 import type { HTMLAttributes } from 'react'
-import { Form, useActionData, useNavigation } from 'react-router'
+import { Form, useNavigation } from 'react-router'
 import { PasswordInput } from '~/components/password-input'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
@@ -11,11 +11,15 @@ import { cn } from '~/lib/utils'
 import { formSchema } from '../+schema'
 import type { action } from '../index'
 
-type SignUpFormProps = HTMLAttributes<HTMLFormElement>
+type SignUpFormProps = HTMLAttributes<HTMLFormElement> & {
+  actionData?: Awaited<ReturnType<typeof action>>
+}
 
-export function SignUpForm({ className, ...props }: SignUpFormProps) {
-  const actionData = useActionData<typeof action>()
-
+export function SignUpForm({
+  className,
+  actionData,
+  ...props
+}: SignUpFormProps) {
   const { form, fields } = useForm(formSchema, {
     lastResult: actionData?.result,
     defaultValue: {

@@ -65,6 +65,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
 export default function UserEdit({
   loaderData: { user },
+  actionData,
 }: Route.ComponentProps) {
   return (
     <div>
@@ -77,7 +78,7 @@ export default function UserEdit({
         </PageHeaderHeading>
       </PageHeader>
 
-      <UsersMutateForm user={user} />
+      <UsersMutateForm user={user} actionData={actionData} />
     </div>
   )
 }

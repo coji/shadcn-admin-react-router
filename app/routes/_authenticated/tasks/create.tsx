@@ -46,7 +46,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   })
 }
 
-export default function TaskCreate() {
+export default function TaskCreate({ actionData }: Route.ComponentProps) {
   return (
     <div>
       <PageHeader>
@@ -59,7 +59,7 @@ export default function TaskCreate() {
         </PageHeaderHeading>
       </PageHeader>
 
-      <TasksMutateForm />
+      <TasksMutateForm actionData={actionData} />
     </div>
   )
 }

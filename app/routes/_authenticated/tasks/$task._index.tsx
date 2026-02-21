@@ -58,6 +58,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 export default function TaskEdit({
   loaderData: { task },
+  actionData,
 }: Route.ComponentProps) {
   return (
     <div>
@@ -71,7 +72,7 @@ export default function TaskEdit({
         </PageHeaderHeading>
       </PageHeader>
 
-      <TasksMutateForm task={task} />
+      <TasksMutateForm task={task} actionData={actionData} />
     </div>
   )
 }

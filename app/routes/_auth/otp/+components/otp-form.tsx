@@ -1,6 +1,6 @@
 import { useFormData } from '@conform-to/react/future'
 import type { HTMLAttributes } from 'react'
-import { Form, useActionData, useNavigation } from 'react-router'
+import { Form, useNavigation } from 'react-router'
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import {
@@ -14,10 +14,11 @@ import { cn } from '~/lib/utils'
 import { formSchema } from '../+schema'
 import type { action } from '../index'
 
-type OtpFormProps = HTMLAttributes<HTMLFormElement>
+type OtpFormProps = HTMLAttributes<HTMLFormElement> & {
+  actionData?: Awaited<ReturnType<typeof action>>
+}
 
-export function OtpForm({ className, ...props }: OtpFormProps) {
-  const actionData = useActionData<typeof action>()
+export function OtpForm({ className, actionData, ...props }: OtpFormProps) {
   const { form, fields, intent } = useForm(formSchema, {
     lastResult: actionData?.result,
     defaultValue: { otp: '' },

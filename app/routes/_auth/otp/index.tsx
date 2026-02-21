@@ -31,7 +31,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   })
 }
 
-export default function Otp() {
+export default function Otp({ actionData }: Route.ComponentProps) {
   return (
     <Card className="p-6">
       <div className="mb-2 flex flex-col space-y-2 text-left">
@@ -43,7 +43,7 @@ export default function Otp() {
           authentication code to your email.
         </p>
       </div>
-      <OtpForm />
+      <OtpForm actionData={actionData} />
       <p className="text-muted-foreground mt-4 px-8 text-center text-sm">
         Haven't received it?{' '}
         <Link

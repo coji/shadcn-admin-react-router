@@ -1,6 +1,6 @@
 import type { SubmissionResult } from '@conform-to/react/future'
 import { coerceFormValue } from '@conform-to/zod/v4/future'
-import { Form, href, Link, useActionData, useNavigation } from 'react-router'
+import { Form, href, Link, useNavigation } from 'react-router'
 import { z } from 'zod'
 import { Select as ConformSelect } from '~/components/conform'
 import { PasswordInput } from '~/components/password-input'
@@ -95,9 +95,14 @@ const formSchema = coerceFormValue(
     }),
 )
 
-export function UsersMutateForm({ user }: { user?: User }) {
+export function UsersMutateForm({
+  user,
+  actionData,
+}: {
+  user?: User
+  actionData?: { result: SubmissionResult }
+}) {
   const isEdit = !!user
-  const actionData = useActionData<{ result: SubmissionResult }>()
   const { form, fields } = useForm(formSchema, {
     lastResult: actionData?.result,
     defaultValue: isEdit

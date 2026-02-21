@@ -31,7 +31,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   })
 }
 
-export default function SignIn() {
+export default function SignIn({ actionData }: Route.ComponentProps) {
   return (
     <Card className="p-6">
       <div className="flex flex-col space-y-2 text-left">
@@ -41,7 +41,7 @@ export default function SignIn() {
           to log into your account
         </p>
       </div>
-      <UserAuthForm />
+      <UserAuthForm actionData={actionData} />
       <p className="text-muted-foreground mt-4 px-8 text-center text-sm">
         By clicking login, you agree to our{' '}
         <a

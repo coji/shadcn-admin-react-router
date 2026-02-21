@@ -1,8 +1,7 @@
-import type { SubmissionResult } from '@conform-to/react/future'
 import { parseSubmission, report } from '@conform-to/react/future'
 import { coerceFormValue } from '@conform-to/zod/v4/future'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { Form, href, Link, useActionData, useNavigation } from 'react-router'
+import { Form, href, Link, useNavigation } from 'react-router'
 import { redirectWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { Select as ConformSelect } from '~/components/conform'
@@ -65,8 +64,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   )
 }
 
-export default function UserInvite() {
-  const actionData = useActionData<{ result: SubmissionResult }>()
+export default function UserInvite({ actionData }: Route.ComponentProps) {
   const { form, fields } = useForm(formSchema, {
     lastResult: actionData?.result,
     defaultValue: { email: '', role: '', desc: '' },
